@@ -142,3 +142,4 @@ pip-selfcheck.json
 
 ### VisualStudioCode ###
 .vscode/
+*.json
