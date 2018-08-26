@@ -1,7 +1,7 @@
 import json
-import logging
 import os
 import re
+import sys
 from collections import defaultdict
 from pprint import pprint
 
@@ -31,7 +31,7 @@ class FilesScaner:
         pprint(self.files)
 
 
-class FileParser:
+class FilesParser:
     re_class = re.compile(r'class (\w+)')
     re_method = re.compile(r'\s+def (\w+)')
     re_function = re.compile(r'def (\w+)')
@@ -62,35 +62,38 @@ class FileParser:
         return metadata
 
 
-class TestRunnerConstructor:
+class ParserTests:
     test_files_structure = {}
+    cache_file = 'test_runner_cache.json'
 
     def __init__(self, pref, suff):
         self.file_scaner = FilesScaner(pref, suff)
-        self.file_parser = FileParser()
+        self.file_parser = FilesParser()
 
-    def parse_test_structure(self, folder_path):
+    def parse(self, folder_path, without_caching=False):
         self.file_scaner.scan(folder_path)
-        logging.info('Number of test files: {}'.format(len(self.file_scaner.files)))
+
+        if not self.file_scaner.files:
+            sys.stderr.write('Nothing to parse - folder is empty\n')
+            return
+
+        sys.stderr.write('Number of test files: {}\n'.format(len(self.file_scaner.files)))
+
         for filepath in self.file_scaner.files:
             self.test_files_structure[filepath] = self.file_parser.parse_file(filepath)
-        logging.info('Search for files and their parsing is complete')
+        sys.stderr.write('Parsing is completed\n')
+
+        if not without_caching:
+            self._saves_cache()
 
     def show_test_structure(self):
-        pprint(self.test_files_structure)
+        # TODO: show cached tests structure (open json file)
+        if self.test_files_structure:
+            pprint(self.test_files_structure)
+        else:
+            sys.stderr.write('Nothing to show. Before call this command run the "parse" command\n')
 
-    def save_cache(self):
-        with open('test_runner_cache.json', 'w') as outfile:
+    def _saves_cache(self):
+        with open(self.cache_file, 'w') as outfile:
             json.dump(self.test_files_structure, outfile)
-        logging.info('Test structure was saved into file')
-
-
-def main():
-    test_runner = TestRunnerConstructor(pref='test_', suff='.py')
-    test_runner.parse_test_structure('/home/ihor/dev/test')
-    # test_runner.show_test_structure()
-    test_runner.save_cache()
-
-
-if __name__ == '__main__':
-    main()
+        sys.stderr.write('Tests structure was cached\n')
