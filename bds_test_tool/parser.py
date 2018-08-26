@@ -4,6 +4,10 @@ import re
 import sys
 from collections import defaultdict
 from pprint import pprint
+from bds_test_tool.utils import ColorOutput
+
+color_output = ColorOutput()
+work_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class FilesScaner:
@@ -64,7 +68,7 @@ class FilesParser:
 
 class ParserTests:
     _test_files_structure = {}
-    _cache_file = 'test_runner_cache.json'
+    _cache_file = os.path.join(work_directory, '.btt_cache.json')
 
     def __init__(self, pref, suff):
         self._file_scaner = FilesScaner(pref, suff)
@@ -79,26 +83,34 @@ class ParserTests:
         self._file_scaner._scan(folder_path)
 
         if not self._file_scaner.files:
-            sys.stderr.write('Nothing to parse - folder is empty\n')
+            message = color_output.warning('Nothing to parse - no test files\n')
+            sys.stderr.write(message)
             return
 
-        sys.stderr.write('Number of test files: {}\n'.format(len(self._file_scaner.files)))
+        message = color_output.info('Number of test files: {}\n'.format(len(self._file_scaner.files)))
+        sys.stderr.write(message)
 
         for filepath in self._file_scaner.files:
             self._test_files_structure[filepath] = self._file_parser._parse_file(filepath)
-        sys.stderr.write('Parsing is completed\n')
+
+        message = color_output.succes('Parsing is completed\n')
+        sys.stderr.write(message)
 
         if not without_caching:
             self._saves_cache()
 
     def show_test_structure(self):
-        # TODO: show cached tests structure (open json file)
-        if self._test_files_structure:
-            pprint(self._test_files_structure)
+        if os.path.exists(self._cache_file):
+            with open(self._cache_file) as file:
+                data = json.load(file)
+                pprint(data)
         else:
-            sys.stderr.write('Nothing to show. Before call this command run the "parse" command\n')
+            message = color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
+            sys.stderr.write(message)
 
     def _saves_cache(self):
         with open(self._cache_file, 'w') as outfile:
             json.dump(self._test_files_structure, outfile)
-        sys.stderr.write('Tests structure was cached\n')
+
+        message = color_output.info('Tests structure was cached\n')
+        sys.stderr.write(message)
