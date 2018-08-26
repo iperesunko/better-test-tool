@@ -1,7 +1,8 @@
-from parser import ParserTests
+from bds_test_tool.parser import ParserTests
 
 import fire
 
-if __name__ == '__main__':
+
+def main():
     test_parser = ParserTests(pref='test_', suff='.py')
     fire.Fire(test_parser)
