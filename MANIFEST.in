@@ -1,0 +1,2 @@
+include bds_test_tool/help.tpl
+exclude tests

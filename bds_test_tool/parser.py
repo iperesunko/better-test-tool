@@ -1,16 +1,16 @@
 import json
 import os
 import re
-import sys
 from collections import defaultdict
 from pprint import pprint
+
 from bds_test_tool.utils import ColorOutput
 
 color_output = ColorOutput()
 work_directory = os.path.dirname(os.path.realpath(__file__))
 
 
-class FilesScaner:
+class FilesScaner(object):
     files = []
 
     def __init__(self, pref, suff):
@@ -35,7 +35,7 @@ class FilesScaner:
         pprint(self.files)
 
 
-class FilesParser:
+class FilesParser(object):
     re_class = re.compile(r'class (\w+)')
     re_method = re.compile(r'\s+def (\w+)')
     re_function = re.compile(r'def (\w+)')
@@ -83,18 +83,15 @@ class ParserTests:
         self._file_scaner._scan(folder_path)
 
         if not self._file_scaner.files:
-            message = color_output.warning('Nothing to parse - no test files\n')
-            sys.stderr.write(message)
+            color_output.warning('Nothing to parse - no test files\n')
             return
 
-        message = color_output.info('Number of test files: {}\n'.format(len(self._file_scaner.files)))
-        sys.stderr.write(message)
+        color_output.info('Number of test files: {}\n'.format(len(self._file_scaner.files)))
 
         for filepath in self._file_scaner.files:
             self._test_files_structure[filepath] = self._file_parser._parse_file(filepath)
 
-        message = color_output.succes('Parsing is completed\n')
-        sys.stderr.write(message)
+        color_output.succes('Parsing is completed\n')
 
         if not without_caching:
             self._saves_cache()
@@ -105,12 +102,10 @@ class ParserTests:
                 data = json.load(file)
                 pprint(data)
         else:
-            message = color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
-            sys.stderr.write(message)
+            color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
 
     def _saves_cache(self):
         with open(self._cache_file, 'w') as outfile:
             json.dump(self._test_files_structure, outfile)
 
-        message = color_output.info('Tests structure was cached\n')
-        sys.stderr.write(message)
+        color_output.info('Tests structure was cached\n')
