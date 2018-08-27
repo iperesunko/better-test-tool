@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 from bds_test_tool.utils import ColorOutput, cache_file_path
 
@@ -52,6 +53,25 @@ class BaseLauncher(object):
     def _format_multuple_modules(self, modules):
         return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])
 
+    def _read_user_answer(self, range):
+        while True:
+            try:
+                text = sys.stdin.readline()
+            except KeyboardInterrupt:
+                return
+            else:
+                text = text.strip()
+
+                if text.isdigit():
+                    digit = int(text)
+
+                    if digit > range:
+                        color_output.warning('The answer is out of the acceptable range. Choose another answer.\n')
+                    else:
+                        return digit
+                else:
+                    color_output.warning('This is not a digit. Please enter the answer again\n')
+
     def generate_command(self, simplified_path):
         raise NotImplemented
 
@@ -59,21 +79,37 @@ class BaseLauncher(object):
         raise NotImplemented
 
 
-class NoseTestLauncher(BaseLauncher):
+class NoseTestsLauncher(BaseLauncher):
+    _command = 'nosetests -svv {filepath}\n'
+
     def generate_command(self, simplified_path):
+        command = None
         if self._open_cache_file():
             modules = self._find_test_module(simplified_path)
-            if 1 > len(modules) <= 10:
+            modules_number = len(modules)
+
+            if modules_number > 10:
+                color_output.warning('Too many suggestions. Please enter a more specific query\n')
+                return False
+            elif 1 < modules_number <= 10:
                 formatted = self._format_multuple_modules(modules)
                 message = 'Several modules were found, select the required one:\n' + formatted
                 color_output.info(message + '\n')
 
+                result = self._read_user_answer(modules_number)
+                command = self._command.format(filepath=modules[result - 1])
+            elif modules_number == 1:
+                command = self._command.format(filepath=modules[0])
+            else:
+                color_output.warning('No matches found.\n')
+
+            return command
+
     def run(self, simplified_path):
         if self._open_cache_file():
-            color_output.succes('Nose test run test\n')
-        else:
-            color_output.error('Nose test do not run test\n')
+            command = self.generate_command(simplified_path)
+            color_output.succes('Run {}'.format(command))
 
 
 class AbstractLauncherFactory(object):
-    nosetest = NoseTestLauncher()
+    nosetests = NoseTestsLauncher()
