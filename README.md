@@ -7,5 +7,5 @@
 ## Setup and usages
 ```bash
 $ python setup.py install
-$ btt --help
+$ btt help
 ```

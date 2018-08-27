@@ -72,6 +72,27 @@ class BaseLauncher(object):
                 else:
                     color_output.warning('This is not a digit. Please enter the answer again\n')
 
+    def _module_selection_and_generate_command(self, modules):
+        modules_number = len(modules)
+
+        if modules_number > 10:
+            color_output.warning('Too many suggestions. Please enter a more specific query\n')
+            return False
+        elif 1 < modules_number <= 10:
+            formatted = self._format_multuple_modules(modules)
+            message = 'Several modules were found, select the required one:\n' + formatted
+            color_output.info(message + '\n')
+
+            result = self._read_user_answer(modules_number)
+            module_path = modules[result - 1]
+        elif modules_number == 1:
+            module_path = modules[0]
+        else:
+            color_output.warning('No matches found.\n')
+            return False
+
+        return module_path
+
     def generate_command(self, simplified_path):
         raise NotImplemented
 
@@ -83,32 +104,18 @@ class NoseTestsLauncher(BaseLauncher):
     _command = 'nosetests -svv {filepath}\n'
 
     def generate_command(self, simplified_path):
-        command = None
         if self._open_cache_file():
             modules = self._find_test_module(simplified_path)
-            modules_number = len(modules)
+            module_filepath = self._module_selection_and_generate_command(modules)
 
-            if modules_number > 10:
-                color_output.warning('Too many suggestions. Please enter a more specific query\n')
-                return False
-            elif 1 < modules_number <= 10:
-                formatted = self._format_multuple_modules(modules)
-                message = 'Several modules were found, select the required one:\n' + formatted
-                color_output.info(message + '\n')
-
-                result = self._read_user_answer(modules_number)
-                command = self._command.format(filepath=modules[result - 1])
-            elif modules_number == 1:
-                command = self._command.format(filepath=modules[0])
-            else:
-                color_output.warning('No matches found.\n')
-
-            return command
+            if module_filepath:
+                return self._command.format(filepath=module_filepath)
 
     def run(self, simplified_path):
         if self._open_cache_file():
             command = self.generate_command(simplified_path)
-            color_output.succes('Run {}'.format(command))
+            if command:
+                color_output.succes('Run {}'.format(command))
 
 
 class AbstractLauncherFactory(object):
