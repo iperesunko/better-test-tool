@@ -1,20 +1,18 @@
 import json
 import os
 
-from bds_test_tool.utils import ColorOutput
+from bds_test_tool.utils import ColorOutput, cache_file_path
 
 color_output = ColorOutput()
 
 
 class BaseLauncher(object):
     _files_structure = None
+    _cache_file = cache_file_path
 
     def _open_cache_file(self):
-        work_directory = os.path.dirname(os.path.realpath(__file__))
-        _cache_file = os.path.join(work_directory, '.btt_cache.json')
-
-        if os.path.exists(_cache_file):
-            with open(_cache_file) as file:
+        if os.path.exists(self._cache_file):
+            with open(self._cache_file) as file:
                 self._files_structure = json.load(file)
             return True
         else:

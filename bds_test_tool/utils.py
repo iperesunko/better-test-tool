@@ -1,3 +1,4 @@
+import os
 import sys
 
 
@@ -19,3 +20,9 @@ class ColorOutput:
 
     def info(self, text):
         sys.stderr.write(self.BLUE + text + self.RESET)
+
+
+# File configuration for caching
+cache_filename = '.btt_cache.json'
+work_directory = os.path.dirname(os.path.realpath(__file__))
+cache_file_path = os.path.join(work_directory, cache_filename)

@@ -4,10 +4,9 @@ import re
 from collections import defaultdict
 from pprint import pprint
 
-from bds_test_tool.utils import ColorOutput
+from bds_test_tool.utils import ColorOutput, cache_file_path
 
 color_output = ColorOutput()
-work_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class FilesScaner(object):
@@ -68,7 +67,7 @@ class FilesParser(object):
 
 class ParserTests:
     _test_files_structure = {}
-    _cache_file = os.path.join(work_directory, '.btt_cache.json')
+    _cache_file = cache_file_path
 
     def __init__(self, pref, suff):
         self._file_scaner = FilesScaner(pref, suff)

@@ -6,14 +6,16 @@ from bds_test_tool.parser import FilesParser, FilesScaner, ParserTests
 
 class TestFilesScaner:
 
+    @classmethod
     def setup_class(cls):
         cls.files_scaner = FilesScaner('test_', '.py')
+        cls.files_scaner.files = []
 
     def test_scan(self):
         test_files = [
             'file-fixtures/test_skl_1.py',
             'file-fixtures/test_some_func.py',
-            'file-fixtures/unit/server/test_server.py',
+            'file-fixtures/unit/server/test_config_server.py',
         ]
 
         self.files_scaner._scan('file-fixtures')
@@ -31,6 +33,8 @@ class TestFilesScaner:
 
 
 class TestFilesParser:
+
+    @classmethod
     def setup_class(cls):
         cls.files_parser = FilesParser()
 
@@ -38,7 +42,7 @@ class TestFilesParser:
         files = [
             'file-fixtures/test_skl_1.py',
             'file-fixtures/test_some_func.py',
-            'file-fixtures/unit/server/test_server.py',
+            'file-fixtures/unit/server/test_config_server.py',
         ]
 
         parsed_files = [
@@ -75,6 +79,8 @@ class TestFilesParser:
 
 
 class TestParserTests:
+
+    @classmethod
     def setup_class(cls):
         cls.parser_test = ParserTests(pref='test_', suff='.py')
         cls.parser_test._cache_file = '.btt_cache.json'
@@ -98,7 +104,7 @@ class TestParserTests:
                     'test_case_without_class'
                 ]
             },
-            'file-fixtures/unit/server/test_server.py': {
+            'file-fixtures/unit/server/test_config_server.py': {
                 'functions': [
                     'test_initialize_ok_zk',
                     'test_add_invalid_path',
@@ -107,6 +113,7 @@ class TestParserTests:
             }
         }
 
+    @classmethod
     def teardown_class(cls):
         if os.path.exists('.btt_cache.json'):
             os.remove('.btt_cache.json')
