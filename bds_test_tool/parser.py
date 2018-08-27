@@ -10,11 +10,11 @@ color_output = ColorOutput()
 
 
 class FilesScaner(object):
-    files = []
 
     def __init__(self, pref, suff):
         self.pref = pref
         self.suff = suff
+        self.files = []
 
     def _scan(self, path):
         found_files = os.walk(path)
@@ -66,12 +66,12 @@ class FilesParser(object):
 
 
 class ParserTests:
-    _test_files_structure = {}
     _cache_file = cache_file_path
 
     def __init__(self, pref, suff):
         self._file_scaner = FilesScaner(pref, suff)
         self._file_parser = FilesParser()
+        self._test_files_structure = {}
 
     def parse(self, folder_path, without_caching=False):
         """

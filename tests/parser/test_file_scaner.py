@@ -6,13 +6,12 @@ from bds_test_tool.parser import FilesParser, FilesScaner, ParserTests
 
 class TestFilesScaner:
 
-    @classmethod
-    def setup_class(cls):
-        cls.files_scaner = FilesScaner('test_', '.py')
-        cls.files_scaner.files = []
+    def setup_method(self, method):
+        self.files_scaner = FilesScaner('test_', '.py')
 
     def test_scan(self):
         test_files = [
+            'file-fixtures/test_config_server.py',
             'file-fixtures/test_skl_1.py',
             'file-fixtures/test_some_func.py',
             'file-fixtures/unit/server/test_config_server.py',
@@ -34,18 +33,27 @@ class TestFilesScaner:
 
 class TestFilesParser:
 
-    @classmethod
-    def setup_class(cls):
-        cls.files_parser = FilesParser()
+    def setup_method(self, method):
+        self.files_parser = FilesParser()
 
     def test_parse_file(self):
         files = [
+            'file-fixtures/test_config_server.py',
             'file-fixtures/test_skl_1.py',
             'file-fixtures/test_some_func.py',
             'file-fixtures/unit/server/test_config_server.py',
         ]
 
         parsed_files = [
+            {
+                'TestConfigServer': [
+                    'test_one_case',
+                    'test_alpha_settings',
+                ],
+                'functions': [
+                    'test_configuration',
+                ]
+            },
             {
                 'TestAlphaClass': [
                     'test_d_suite',
@@ -80,11 +88,19 @@ class TestFilesParser:
 
 class TestParserTests:
 
-    @classmethod
-    def setup_class(cls):
-        cls.parser_test = ParserTests(pref='test_', suff='.py')
-        cls.parser_test._cache_file = '.btt_cache.json'
-        cls.parsed_structure = {
+    def setup_method(self, method):
+        self.parser_test = ParserTests(pref='test_', suff='.py')
+        self.parser_test._cache_file = '.btt_cache.json'
+        self.parsed_structure = {
+            'file-fixtures/test_config_server.py': {
+                'TestConfigServer': [
+                    'test_one_case',
+                    'test_alpha_settings',
+                ],
+                'functions': [
+                    'test_configuration',
+                ]
+            },
             'file-fixtures/test_skl_1.py': {
                 'TestAlphaClass': [
                     'test_d_suite',
@@ -113,8 +129,7 @@ class TestParserTests:
             }
         }
 
-    @classmethod
-    def teardown_class(cls):
+    def teardown_method(self, method):
         if os.path.exists('.btt_cache.json'):
             os.remove('.btt_cache.json')
 
