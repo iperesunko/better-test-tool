@@ -31,15 +31,15 @@ class BaseLauncher(object):
 class NoseTestLauncher(BaseLauncher):
     def generate_command(self, simplified_path):
         if self._open_cache_file():
-            color_output.succes('Nose test generate a command')
+            color_output.succes('Nose test generate a command\n')
         else:
-            color_output.error('Nose test do not generate a command')
+            color_output.error('Nose test do not generate a command\n')
 
     def run(self, simplified_path):
         if self._open_cache_file():
-            color_output.succes('Nose test run test')
+            color_output.succes('Nose test run test\n')
         else:
-            color_output.error('Nose test do not run test')
+            color_output.error('Nose test do not run test\n')
 
 
 class AbstractLauncherFactory(object):

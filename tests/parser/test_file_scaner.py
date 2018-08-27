@@ -1,4 +1,7 @@
-from bds_test_tool.parser import FilesParser, FilesScaner
+import json
+import os
+
+from bds_test_tool.parser import FilesParser, FilesScaner, ParserTests
 
 
 class TestFilesScaner:
@@ -69,3 +72,55 @@ class TestFilesParser:
 
         for file, result in zip(files, parsed_files):
             assert result == self.files_parser._parse_file(file)
+
+
+class TestParserTests:
+    def setup_class(cls):
+        cls.parser_test = ParserTests(pref='test_', suff='.py')
+        cls.parser_test._cache_file = '.btt_cache.json'
+        cls.parsed_structure = {
+            'file-fixtures/test_skl_1.py': {
+                'TestAlphaClass': [
+                    'test_d_suite',
+                    'test_settings',
+                ],
+                'functions': [
+                    'test_case_one',
+                    'test_some_test',
+                ]
+            },
+            'file-fixtures/test_some_func.py': {
+                'TestFunctional': [
+                    'test_one_case',
+                    'test_other_case',
+                ],
+                'functions': [
+                    'test_case_without_class'
+                ]
+            },
+            'file-fixtures/unit/server/test_server.py': {
+                'functions': [
+                    'test_initialize_ok_zk',
+                    'test_add_invalid_path',
+                    'test_add_duplicate',
+                ],
+            }
+        }
+
+    def teardown_class(cls):
+        if os.path.exists('.btt_cache.json'):
+            os.remove('.btt_cache.json')
+
+    def test_parse_without_cache(self):
+        self.parser_test.parse('file-fixtures', without_caching=True)
+        assert os.path.exists('.btt_cache.json') is False
+        assert self.parser_test._test_files_structure == self.parsed_structure
+
+    def test_parse_with_cache(self):
+        self.parser_test.parse('file-fixtures')
+        assert os.path.exists('.btt_cache.json') is True
+        assert self.parser_test._test_files_structure == self.parsed_structure
+
+        with open('.btt_cache.json') as file:
+            data = json.load(file)
+        assert data == self.parsed_structure and data == self.parser_test._test_files_structure
