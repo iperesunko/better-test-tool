@@ -5,11 +5,11 @@ from bds_test_tool.launchers import Finder
 from bds_test_tool.parser import ParserTests
 
 
-class TestBaseLauncher:
+class TestFinder:
 
     def setup_method(self, method):
-        self.base_launcher = Finder()
-        self.base_launcher._cache_file = '.btt_cache.json'
+        self.finder = Finder()
+        self.finder._cache_file = '.btt_cache.json'
 
     def teardown_method(self, method):
         if os.path.exists('.btt_cache.json'):
@@ -21,18 +21,36 @@ class TestBaseLauncher:
         parser.parse('file-fixtures')
 
     def test__open_cache_file_without_file(self):
-        result = self.base_launcher.open_cache_file()
+        result = self.finder.open_cache_file()
         assert result is False
 
     def test__open_cache_file(self):
         self.do_parse()
 
-        result = self.base_launcher.open_cache_file()
+        result = self.finder.open_cache_file()
         assert result is True
 
         with open('.btt_cache.json') as file:
             data = json.load(file)
-        assert data == self.base_launcher._files_structure
+        assert data == self.finder._files_structure
+
+    def test__generate_regex(self):
+        expected = (
+            '.*unit.*',
+            '.*extract.*pstn.*',
+            '.*.py.*',
+            '.*regress.*transf.*cme.*'
+        )
+
+        data = (
+            'unit',
+            'extract pstn',
+            '.py',
+            'regress transf cme'
+        )
+
+        for path, expect in zip(data, expected):
+            assert expect == self.finder._generate_regex(path)
 
     def test__finds_modules(self):
         matched_modules = {
@@ -40,11 +58,11 @@ class TestBaseLauncher:
             'file-fixtures/unit/server/test_config_server.py'
         }
         self.do_parse()
-        self.base_launcher.open_cache_file()
-        result = set(self.base_launcher.finds_modules('config_server'))
+        self.finder.open_cache_file()
+        result = set(self.finder.finds_modules('config_server'))
         assert result == matched_modules
 
-        result = set(self.base_launcher.finds_modules('unit config_server'))
+        result = set(self.finder.finds_modules('unit config_server'))
         assert result == {'file-fixtures/unit/server/test_config_server.py'}
 
         matched_modules = {
@@ -53,11 +71,11 @@ class TestBaseLauncher:
             'file-fixtures/test_some_func.py',
             'file-fixtures/unit/server/test_config_server.py',
         }
-        result = set(self.base_launcher.finds_modules('.py'))
+        result = set(self.finder.finds_modules('.py'))
         assert result == matched_modules
 
-        result = set(self.base_launcher.finds_modules('unit'))
+        result = set(self.finder.finds_modules('unit'))
         assert result == {'file-fixtures/unit/server/test_config_server.py'}
 
-        result = set(self.base_launcher.finds_modules('skl2'))
+        result = set(self.finder.finds_modules('skl2'))
         assert result == set()
