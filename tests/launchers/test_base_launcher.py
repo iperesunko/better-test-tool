@@ -34,15 +34,30 @@ class TestBaseLauncher:
             data = json.load(file)
         assert data == self.base_launcher._files_structure
 
-    def test__find_test_module(self):
+    def test__finds_modules(self):
         matched_modules = {
             'file-fixtures/test_config_server.py',
             'file-fixtures/unit/server/test_config_server.py'
         }
         self.do_parse()
         self.base_launcher._open_cache_file()
-        result = set(self.base_launcher._find_test_module('config_server'))
+        result = set(self.base_launcher._finds_modules('config_server'))
         assert result == matched_modules
 
-        result = set(self.base_launcher._find_test_module('unit config_server'))
+        result = set(self.base_launcher._finds_modules('unit config_server'))
         assert result == {'file-fixtures/unit/server/test_config_server.py'}
+
+        matched_modules = {
+            'file-fixtures/test_config_server.py',
+            'file-fixtures/test_skl_1.py',
+            'file-fixtures/test_some_func.py',
+            'file-fixtures/unit/server/test_config_server.py',
+        }
+        result = set(self.base_launcher._finds_modules('.py'))
+        assert result == matched_modules
+
+        result = set(self.base_launcher._finds_modules('unit'))
+        assert result == {'file-fixtures/unit/server/test_config_server.py'}
+
+        result = set(self.base_launcher._finds_modules('skl2'))
+        assert result == set()

@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import re
 
 from bds_test_tool.utils import ColorOutput, cache_file_path, search_statistics
 
@@ -25,28 +26,19 @@ class BaseLauncher(object):
             color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
             return False
 
-    def _check_compliance(self, file_path, simplified_path):
-        """
-        Checks the path of the module for matching with the specified names
-        :param str file_path: 'file-fixtures/unit/server/test_config_server.py'
-        :param simplified_path: 'unit server config_server'
-        :return bool: True or False
-        """
-        for name in simplified_path.split(' '):
-            if name not in file_path:
-                break
-        else:
-            return True
-
-        return False
+    def _generate_regex(self, simplified_path):
+        splitted = simplified_path.split(' ')
+        raw = ''.join(['.*{}.*'.format(word) for word in splitted])
+        return raw.replace('.*.*', '.*')
 
     @search_statistics
-    def _find_test_module(self, simplified_path):
+    def _finds_modules(self, simplified_path):
         matching = []
         modules = self._files_structure.keys()
+        regex = self._generate_regex(simplified_path)
 
         for module in modules:
-            if self._check_compliance(module, simplified_path):
+            if re.match(regex, module):
                 matching.append(module)
 
         return matching
@@ -106,7 +98,7 @@ class NoseTestsLauncher(BaseLauncher):
 
     def generate_command(self, simplified_path):
         if self._open_cache_file():
-            modules = self._find_test_module(simplified_path)
+            modules = self._finds_modules(simplified_path)
             module_filepath = self._module_selection_and_generate_command(modules)
 
             if module_filepath:
