@@ -1,7 +1,6 @@
 import os
 
 import fire
-
 from bds_test_tool.launchers import Finder, NoseTestsLauncher
 from bds_test_tool.parser import ParserTests
 from bds_test_tool.utils import ColorOutput
@@ -15,6 +14,7 @@ nosetests = NoseTestsLauncher()
 
 
 def help_message():
+    """Displays a help message into the console"""
     with open(os.path.join(working_directory, 'help.tpl')) as file:
         text = file.readlines()
     color_output.info(''.join(text))

@@ -4,32 +4,45 @@ from timeit import default_timer as timer
 
 
 class ColorOutput:
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[33m'
-    BLUE = '\033[94m'
-    RESET = '\033[0m'
+    """
+    The class contains methods for color outputting messages to the screen
+    """
+    red = '\033[31m'
+    green = '\033[32m'
+    yellow = '\033[33m'
+    blue = '\033[94m'
+    reset = '\033[0m'
 
     def error(self, text):
-        sys.stderr.write(self.RED + text + self.RESET)
+        """Displays error messages in the console"""
+        sys.stderr.write(self.red + text + self.reset)
 
     def warning(self, text):
-        sys.stderr.write(self.YELLOW + text + self.RESET)
+        """Displays warning messages in the console"""
+        sys.stderr.write(self.yellow + text + self.reset)
 
     def succes(self, text):
-        sys.stderr.write(self.GREEN + text + self.RESET)
+        """Displays success messages in the console"""
+        sys.stderr.write(self.green + text + self.reset)
 
     def info(self, text):
-        sys.stderr.write(self.BLUE + text + self.RESET)
+        """Displays info messages in the console"""
+        sys.stderr.write(self.blue + text + self.reset)
 
 
 # File configuration for caching
-cache_filename = '.btt_cache.json'
-work_directory = os.path.dirname(os.path.realpath(__file__))
-cache_file_path = os.path.join(work_directory, cache_filename)
+CACHE_FILENAME = '.btt_cache.json'
+WORK_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+CACHE_FILE_PATH = os.path.join(WORK_DIRECTORY, CACHE_FILENAME)
 
 
 def search_statistics(func):
+    """
+    The decorator measures the time of searching for modules and displays brief statistics on the screen
+    :param func:
+    :return list:
+    """
+
     def wrapper(*args, **kwargs):
         start_time = timer()
         results = func(*args, **kwargs)
@@ -45,4 +58,9 @@ def search_statistics(func):
 
 
 def format_multuple_modules(modules):
+    """
+    Forms the numbered output of modules from the list
+    :param list modules: list of modules paths
+    :return str:
+    """
     return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])

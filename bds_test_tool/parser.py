@@ -2,7 +2,6 @@ import json
 import os
 import re
 from collections import defaultdict
-from pprint import pprint
 
 from bds_test_tool import utils
 
@@ -17,6 +16,11 @@ class FilesScaner(object):
         self.files = []
 
     def scan(self, path):
+        """
+        Scans the directory and selects files according to the specified criteria
+        :param str path: test/unit/test_config.py
+        :return:
+        """
         found_files = os.walk(path)
 
         for dirpath, _, filenames in found_files:
@@ -25,6 +29,11 @@ class FilesScaner(object):
                     self.files.append(os.path.join(dirpath, _file))
 
     def files_filter(self, file):
+        """
+        Filter files according to the specified criteria
+        :param str file: a filename
+        :return bool:
+        """
         if file.startswith(self.pref) and file.endswith(self.suff):
             return True
 
@@ -37,6 +46,11 @@ class FilesParser(object):
     re_function = re.compile(r'def (\w+)')
 
     def parse_file(self, path):
+        """
+        Parses the input file. Lookup for class, method, and function names
+        :param str path: test/unit/test_config.py
+        :return dict: key - filepath, value dict with parsed structure
+        """
         metadata = defaultdict(list)
         with open(path) as _file:
             text = _file.readlines()
@@ -63,7 +77,11 @@ class FilesParser(object):
 
 
 class ParserTests:
-    _cache_file = utils.cache_file_path
+    """
+    The class contains commands for parsing the structure of tests,
+    saving to the cache and displaying it on the screen
+    """
+    _cache_file = utils.CACHE_FILE_PATH
 
     def __init__(self):
         self.file_scaner = FilesScaner()
@@ -93,17 +111,25 @@ class ParserTests:
             self._saves_cache()
 
     def show_test_structure(self):
+        """
+        Displays a list of parsed files or an error message
+        :return:
+        """
         if os.path.exists(self._cache_file):
             with open(self._cache_file) as file:
                 data = json.load(file)
 
             files = data.keys()
-            formatted = utils.format_multuple_modules(files)
+            formatted = utils.format_multuple_modules(files) + '\n'
             color_output.info(formatted)
         else:
             color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
 
     def _saves_cache(self):
+        """
+        Saves a parsed test structure to a json file
+        :return:
+        """
         with open(self._cache_file, 'w') as outfile:
             json.dump(self._test_files_structure, outfile)
 
