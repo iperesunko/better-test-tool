@@ -1,6 +1,7 @@
 import os
 
 import fire
+
 from bds_test_tool.launchers import AbstractLauncherFactory
 from bds_test_tool.parser import ParserTests
 from bds_test_tool.utils import ColorOutput

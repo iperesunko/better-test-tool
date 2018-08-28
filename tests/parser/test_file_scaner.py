@@ -10,15 +10,15 @@ class TestFilesScaner:
         self.files_scaner = FilesScaner('test_', '.py')
 
     def test_scan(self):
-        test_files = [
+        test_files = {
             'file-fixtures/test_config_server.py',
             'file-fixtures/test_skl_1.py',
             'file-fixtures/test_some_func.py',
             'file-fixtures/unit/server/test_config_server.py',
-        ]
+        }
 
         self.files_scaner._scan('file-fixtures')
-        assert test_files == self.files_scaner.files
+        assert test_files == set(self.files_scaner.files)
 
     def test_files_filter(self):
         files = (

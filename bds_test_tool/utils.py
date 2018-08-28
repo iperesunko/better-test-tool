@@ -1,5 +1,6 @@
 import os
 import sys
+from timeit import default_timer as timer
 
 
 class ColorOutput:
@@ -26,3 +27,18 @@ class ColorOutput:
 cache_filename = '.btt_cache.json'
 work_directory = os.path.dirname(os.path.realpath(__file__))
 cache_file_path = os.path.join(work_directory, cache_filename)
+
+
+def search_statistics(func):
+    def wrapper(*args, **kwargs):
+        start_time = timer()
+        results = func(*args, **kwargs)
+        end_time = timer()
+
+        execute_time = end_time - start_time
+        message = '\033[32mFound results: {} in {:f} seconds\n\n\033[0m'.format(len(results), execute_time)
+        sys.stderr.write(message)
+
+        return results
+
+    return wrapper

@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from bds_test_tool.utils import ColorOutput, cache_file_path
+from bds_test_tool.utils import ColorOutput, cache_file_path, search_statistics
 
 color_output = ColorOutput()
 
@@ -40,6 +40,7 @@ class BaseLauncher(object):
 
         return False
 
+    @search_statistics
     def _find_test_module(self, simplified_path):
         matching = []
         modules = self._files_structure.keys()
