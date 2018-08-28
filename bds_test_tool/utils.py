@@ -42,3 +42,7 @@ def search_statistics(func):
         return results
 
     return wrapper
+
+
+def format_multuple_modules(modules):
+    return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])

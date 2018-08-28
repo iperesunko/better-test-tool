@@ -1,17 +1,18 @@
 import json
 import os
-import sys
 import re
+import sys
 
-from bds_test_tool.utils import ColorOutput, cache_file_path, search_statistics
+from bds_test_tool import utils
 
-color_output = ColorOutput()
+color_output = utils.ColorOutput()
 
 
-class BaseLauncher(object):
-    _cache_file = cache_file_path
+class Finder(object):
+    _cache_file = utils.cache_file_path
 
     def __init__(self):
+        super(Finder, self).__init__()
         self._files_structure = None
 
     def _open_cache_file(self):
@@ -31,7 +32,7 @@ class BaseLauncher(object):
         raw = ''.join(['.*{}.*'.format(word) for word in splitted])
         return raw.replace('.*.*', '.*')
 
-    @search_statistics
+    @utils.search_statistics
     def _finds_modules(self, simplified_path):
         matching = []
         modules = self._files_structure.keys()
@@ -43,10 +44,22 @@ class BaseLauncher(object):
 
         return matching
 
-    def _format_multuple_modules(self, modules):
-        return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])
+    def find(self, simplified_path):
+        """
+        Some Parse desc
+        :param simplified_path:
+        :return:
+        """
+        self._open_cache_file()
+        modules = self._finds_modules(simplified_path)
 
-    def _read_user_answer(self, range):
+        if not modules:
+            color_output.warning('No matches found.\n')
+        else:
+            formatted = utils.format_multuple_modules(modules)
+            color_output.info(formatted)
+
+    def _read_user_answer(self, _range):
         while True:
             try:
                 text = sys.stdin.readline()
@@ -58,7 +71,7 @@ class BaseLauncher(object):
                 if text.isdigit():
                     digit = int(text)
 
-                    if digit > range:
+                    if digit > _range:
                         color_output.warning('The answer is out of the acceptable range. Choose another answer.\n')
                     else:
                         return digit
@@ -72,7 +85,7 @@ class BaseLauncher(object):
             color_output.warning('Too many suggestions. Please enter a more specific query\n')
             return False
         elif 1 < modules_number <= 10:
-            formatted = self._format_multuple_modules(modules)
+            formatted = utils.format_multuple_modules(modules)
             message = 'Several modules were found, select the required one:\n' + formatted
             color_output.info(message + '\n')
 
@@ -86,27 +99,22 @@ class BaseLauncher(object):
 
         return module_path
 
-    def generate_command(self, simplified_path):
-        raise NotImplemented
 
-    def run(self, simplified_path):
-        raise NotImplemented
-
-
-class NoseTestsLauncher(BaseLauncher):
+class NoseTestsLauncher(object):
     _command = 'nosetests -svv {filepath}\n'
+    _finder = Finder()
 
-    def generate_command(self, simplified_path):
-        if self._open_cache_file():
-            modules = self._finds_modules(simplified_path)
-            module_filepath = self._module_selection_and_generate_command(modules)
+    def generate(self, simplified_path):
+        if self._finder._open_cache_file():
+            modules = self._finder._finds_modules(simplified_path)
+            module_filepath = self._finder._module_selection_and_generate_command(modules)
 
             if module_filepath:
                 return self._command.format(filepath=module_filepath)
 
     def run(self, simplified_path):
-        if self._open_cache_file():
-            command = self.generate_command(simplified_path)
+        if self._finder._open_cache_file():
+            command = self.generate(simplified_path)
             if command:
                 color_output.succes('Run {}'.format(command))
 

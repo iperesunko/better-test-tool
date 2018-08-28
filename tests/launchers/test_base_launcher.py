@@ -1,14 +1,14 @@
 import json
 import os
 
-from bds_test_tool.launchers import BaseLauncher
+from bds_test_tool.launchers import Finder
 from bds_test_tool.parser import ParserTests
 
 
 class TestBaseLauncher:
 
     def setup_method(self, method):
-        self.base_launcher = BaseLauncher()
+        self.base_launcher = Finder()
         self.base_launcher._cache_file = '.btt_cache.json'
 
     def teardown_method(self, method):
@@ -16,7 +16,7 @@ class TestBaseLauncher:
             os.remove('.btt_cache.json')
 
     def do_parse(self):
-        parser = ParserTests(pref='test_', suff='.py')
+        parser = ParserTests()
         parser._cache_file = '.btt_cache.json'
         parser.parse('file-fixtures')
 

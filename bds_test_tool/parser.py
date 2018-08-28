@@ -4,14 +4,14 @@ import re
 from collections import defaultdict
 from pprint import pprint
 
-from bds_test_tool.utils import ColorOutput, cache_file_path
+from bds_test_tool import utils
 
-color_output = ColorOutput()
+color_output = utils.ColorOutput()
 
 
 class FilesScaner(object):
 
-    def __init__(self, pref, suff):
+    def __init__(self, pref='test_', suff='.py'):
         self.pref = pref
         self.suff = suff
         self.files = []
@@ -66,10 +66,11 @@ class FilesParser(object):
 
 
 class ParserTests:
-    _cache_file = cache_file_path
+    _cache_file = utils.cache_file_path
 
-    def __init__(self, pref, suff):
-        self._file_scaner = FilesScaner(pref, suff)
+    def __init__(self):
+        super(ParserTests, self).__init__()
+        self._file_scaner = FilesScaner()
         self._file_parser = FilesParser()
         self._test_files_structure = {}
 
@@ -99,7 +100,10 @@ class ParserTests:
         if os.path.exists(self._cache_file):
             with open(self._cache_file) as file:
                 data = json.load(file)
-                pprint(data)
+
+            files = data.keys()
+            formatted = utils.format_multuple_modules(files)
+            color_output.info(formatted)
         else:
             color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
 

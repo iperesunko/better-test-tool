@@ -7,7 +7,7 @@ from bds_test_tool.parser import FilesParser, FilesScaner, ParserTests
 class TestFilesScaner:
 
     def setup_method(self, method):
-        self.files_scaner = FilesScaner('test_', '.py')
+        self.files_scaner = FilesScaner()
 
     def test_scan(self):
         test_files = {
@@ -89,7 +89,7 @@ class TestFilesParser:
 class TestParserTests:
 
     def setup_method(self, method):
-        self.parser_test = ParserTests(pref='test_', suff='.py')
+        self.parser_test = ParserTests()
         self.parser_test._cache_file = '.btt_cache.json'
         self.parsed_structure = {
             'file-fixtures/test_config_server.py': {

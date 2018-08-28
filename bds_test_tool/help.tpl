@@ -5,16 +5,23 @@ Usages:
     e.g. btt parse tests/
 
 Commands:
-    parse {folder_path} [--without_cache=True] - parse a test folder
+    btt parse {folder_path} - Parse a test folder
+    btt show-files - Shows  all tests files
+    btt find '{simplified path}' - Shows matched modules
 
-    show_test_structure - show tests structure
+    btt {launcher_name} run '{simplified path}' - Finds and starts a test module
+    e.g. btt nosetests run 'unit config_server'
 
-    {launcher_name} run {'simplified_path'} - finds and starts a test module (or test case in test module)
-    e.g. btt nosetest run 'unit config_server test_01'
-
-    {launcher_name} generate_command {'simplified_path'} - finds a test and generates a command for a manual start
+    btt {launcher_name} generate '{simplified path}' - Generates a command for a manual start
+    btt help - Shows this message
 
 Launchers:
-    nosetest - Not Implemented
-    regression - Not Implemented
-    pytest - Not Implemented
+    nosetests:
+        run         Not Implemented
+        generate    Implemented
+    regression
+        run         Not Implemented
+        generate    Not Implemented
+    pytest
+        run         Not Implemented
+        generate    Not Implemented
