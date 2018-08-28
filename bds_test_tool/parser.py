@@ -16,22 +16,19 @@ class FilesScaner(object):
         self.suff = suff
         self.files = []
 
-    def _scan(self, path):
+    def scan(self, path):
         found_files = os.walk(path)
 
         for dirpath, _, filenames in found_files:
             for _file in filenames:
-                if self._files_filter(_file):
+                if self.files_filter(_file):
                     self.files.append(os.path.join(dirpath, _file))
 
-    def _files_filter(self, file):
+    def files_filter(self, file):
         if file.startswith(self.pref) and file.endswith(self.suff):
             return True
 
         return False
-
-    def _show_files(self):
-        pprint(self.files)
 
 
 class FilesParser(object):
@@ -39,7 +36,7 @@ class FilesParser(object):
     re_method = re.compile(r'\s+def (\w+)')
     re_function = re.compile(r'def (\w+)')
 
-    def _parse_file(self, path):
+    def parse_file(self, path):
         metadata = defaultdict(list)
         with open(path) as _file:
             text = _file.readlines()
@@ -69,9 +66,8 @@ class ParserTests:
     _cache_file = utils.cache_file_path
 
     def __init__(self):
-        super(ParserTests, self).__init__()
-        self._file_scaner = FilesScaner()
-        self._file_parser = FilesParser()
+        self.file_scaner = FilesScaner()
+        self.file_parser = FilesParser()
         self._test_files_structure = {}
 
     def parse(self, folder_path, without_caching=False):
@@ -80,16 +76,16 @@ class ParserTests:
         :param str folder_path: path to target folder
         :param bool without_caching:
         """
-        self._file_scaner._scan(folder_path)
+        self.file_scaner.scan(folder_path)
 
-        if not self._file_scaner.files:
+        if not self.file_scaner.files:
             color_output.warning('Nothing to parse - no test files\n')
             return
 
-        color_output.info('Number of test files: {}\n'.format(len(self._file_scaner.files)))
+        color_output.info('Number of test files: {}\n'.format(len(self.file_scaner.files)))
 
-        for filepath in self._file_scaner.files:
-            self._test_files_structure[filepath] = self._file_parser._parse_file(filepath)
+        for filepath in self.file_scaner.files:
+            self._test_files_structure[filepath] = self.file_parser.parse_file(filepath)
 
         color_output.succes('Parsing is completed\n')
 

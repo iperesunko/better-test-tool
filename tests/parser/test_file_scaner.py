@@ -17,7 +17,7 @@ class TestFilesScaner:
             'file-fixtures/unit/server/test_config_server.py',
         }
 
-        self.files_scaner._scan('file-fixtures')
+        self.files_scaner.scan('file-fixtures')
         assert test_files == set(self.files_scaner.files)
 
     def test_files_filter(self):
@@ -28,7 +28,7 @@ class TestFilesScaner:
         )
 
         for file, answer in files:
-            assert answer == self.files_scaner._files_filter(file)
+            assert answer == self.files_scaner.files_filter(file)
 
 
 class TestFilesParser:
@@ -83,7 +83,7 @@ class TestFilesParser:
         ]
 
         for file, result in zip(files, parsed_files):
-            assert result == self.files_parser._parse_file(file)
+            assert result == self.files_parser.parse_file(file)
 
 
 class TestParserTests:

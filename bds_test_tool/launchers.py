@@ -12,10 +12,9 @@ class Finder(object):
     _cache_file = utils.cache_file_path
 
     def __init__(self):
-        super(Finder, self).__init__()
         self._files_structure = None
 
-    def _open_cache_file(self):
+    def open_cache_file(self):
         if isinstance(self._files_structure, dict):
             return True
 
@@ -23,9 +22,9 @@ class Finder(object):
             with open(self._cache_file) as file:
                 self._files_structure = json.load(file)
             return True
-        else:
-            color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
-            return False
+
+        color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
+        return False
 
     def _generate_regex(self, simplified_path):
         splitted = simplified_path.split(' ')
@@ -33,7 +32,7 @@ class Finder(object):
         return raw.replace('.*.*', '.*')
 
     @utils.search_statistics
-    def _finds_modules(self, simplified_path):
+    def finds_modules(self, simplified_path):
         matching = []
         modules = self._files_structure.keys()
         regex = self._generate_regex(simplified_path)
@@ -50,8 +49,8 @@ class Finder(object):
         :param simplified_path:
         :return:
         """
-        self._open_cache_file()
-        modules = self._finds_modules(simplified_path)
+        self.open_cache_file()
+        modules = self.finds_modules(simplified_path)
 
         if not modules:
             color_output.warning('No matches found.\n')
@@ -59,7 +58,7 @@ class Finder(object):
             formatted = utils.format_multuple_modules(modules)
             color_output.info(formatted)
 
-    def _read_user_answer(self, _range):
+    def read_user_answer(self, _range):
         while True:
             try:
                 text = sys.stdin.readline()
@@ -78,7 +77,7 @@ class Finder(object):
                 else:
                     color_output.warning('This is not a digit. Please enter the answer again\n')
 
-    def _module_selection_and_generate_command(self, modules):
+    def module_selection_and_generate_command(self, modules):
         modules_number = len(modules)
 
         if modules_number > 10:
@@ -89,7 +88,7 @@ class Finder(object):
             message = 'Several modules were found, select the required one:\n' + formatted
             color_output.info(message + '\n')
 
-            result = self._read_user_answer(modules_number)
+            result = self.read_user_answer(modules_number)
             module_path = modules[result - 1]
         elif modules_number == 1:
             module_path = modules[0]
@@ -101,23 +100,19 @@ class Finder(object):
 
 
 class NoseTestsLauncher(object):
-    _command = 'nosetests -svv {filepath}\n'
-    _finder = Finder()
+    command_template = 'nosetests -svv {filepath}\n'
+    finder = Finder()
 
     def generate(self, simplified_path):
-        if self._finder._open_cache_file():
-            modules = self._finder._finds_modules(simplified_path)
-            module_filepath = self._finder._module_selection_and_generate_command(modules)
+        if self.finder.open_cache_file():
+            modules = self.finder.finds_modules(simplified_path)
+            module_filepath = self.finder.module_selection_and_generate_command(modules)
 
             if module_filepath:
-                return self._command.format(filepath=module_filepath)
+                return self.command_template.format(filepath=module_filepath)
 
     def run(self, simplified_path):
-        if self._finder._open_cache_file():
+        if self.finder.open_cache_file():
             command = self.generate(simplified_path)
             if command:
                 color_output.succes('Run {}'.format(command))
-
-
-class AbstractLauncherFactory(object):
-    nosetests = NoseTestsLauncher()

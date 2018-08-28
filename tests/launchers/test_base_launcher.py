@@ -21,13 +21,13 @@ class TestBaseLauncher:
         parser.parse('file-fixtures')
 
     def test__open_cache_file_without_file(self):
-        result = self.base_launcher._open_cache_file()
+        result = self.base_launcher.open_cache_file()
         assert result is False
 
     def test__open_cache_file(self):
         self.do_parse()
 
-        result = self.base_launcher._open_cache_file()
+        result = self.base_launcher.open_cache_file()
         assert result is True
 
         with open('.btt_cache.json') as file:
@@ -40,11 +40,11 @@ class TestBaseLauncher:
             'file-fixtures/unit/server/test_config_server.py'
         }
         self.do_parse()
-        self.base_launcher._open_cache_file()
-        result = set(self.base_launcher._finds_modules('config_server'))
+        self.base_launcher.open_cache_file()
+        result = set(self.base_launcher.finds_modules('config_server'))
         assert result == matched_modules
 
-        result = set(self.base_launcher._finds_modules('unit config_server'))
+        result = set(self.base_launcher.finds_modules('unit config_server'))
         assert result == {'file-fixtures/unit/server/test_config_server.py'}
 
         matched_modules = {
@@ -53,11 +53,11 @@ class TestBaseLauncher:
             'file-fixtures/test_some_func.py',
             'file-fixtures/unit/server/test_config_server.py',
         }
-        result = set(self.base_launcher._finds_modules('.py'))
+        result = set(self.base_launcher.finds_modules('.py'))
         assert result == matched_modules
 
-        result = set(self.base_launcher._finds_modules('unit'))
+        result = set(self.base_launcher.finds_modules('unit'))
         assert result == {'file-fixtures/unit/server/test_config_server.py'}
 
-        result = set(self.base_launcher._finds_modules('skl2'))
+        result = set(self.base_launcher.finds_modules('skl2'))
         assert result == set()
