@@ -12,6 +12,7 @@ class Finder(object):
     """
     The class searches for the corresponding modules, generates a list of options
     """
+
     def __getattr__(self, item):
         # lazy loading of data from the cache
         if item == '_files_structure':
@@ -117,11 +118,8 @@ class Finder(object):
         return module_path
 
 
-class NoseTestsLauncher(object):
-    """
-    The class implements an interface for interacting with nosetests to generate and run commands
-    """
-    command_template = 'nosetests -svv {filepath}\n'
+class BaseLauncher(object):
+    command_template = None
     finder = Finder()
 
     def generate(self, simplified_path):
@@ -136,12 +134,33 @@ class NoseTestsLauncher(object):
         if module_filepath:
             return self.command_template.format(filepath=module_filepath)
 
-    def run(self, simplified_path):
-        """
-        Executes the generated command
-        :param str simplified_path:
-        :return:
-        """
-        command = self.generate(simplified_path)
-        if command:
-            color_output.succes('Run {}'.format(command))
+
+class NoseTestsLauncher(BaseLauncher):
+    """
+    The class implements an interface for interacting with nosetests to generate commands
+    """
+
+    def __init__(self):
+        super(NoseTestsLauncher).__init__()
+        self.command_template = 'nosetests -svv {filepath}'
+
+
+class PytestLauncher(BaseLauncher):
+    """
+    The class implements an interface for interacting with pytest to generate commands
+    """
+    def __init__(self):
+        super(PytestLauncher).__init__()
+        self.command_template = 'pytest {filepath} -v'
+
+
+class AbstractFabricLauncher(object):
+    launchers = {
+        'nosetests': NoseTestsLauncher(),
+        'pytest': PytestLauncher()}
+
+    def __init__(self, launcher):
+        self.launcher = self.launchers.get(launcher)
+
+    def generate(self, simplified_path):
+        return self.launcher.generate(simplified_path)

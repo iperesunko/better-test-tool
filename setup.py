@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bds_test_tool",
-    version="0.1.0",
+    version="0.2.0",
     author="Ihor Peresunko",
     author_email="ihor.peresunko@genesys.com",
     description="A tool for easy testing the Billing Data Server",
@@ -11,6 +11,4 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': ['btt=bds_test_tool.main:main'],
-    },
-    install_requires=['fire>=0.1.3'],
-)
+    })
