@@ -9,7 +9,6 @@ class TestFinder:
 
     def setup_method(self, method):
         self.finder = Finder()
-        self.finder._cache_file = '.btt_cache.json'
 
     def teardown_method(self, method):
         if os.path.exists('.btt_cache.json'):
@@ -17,22 +16,7 @@ class TestFinder:
 
     def do_parse(self):
         parser = ParserTests()
-        parser._cache_file = '.btt_cache.json'
         parser.parse('file-fixtures')
-
-    def test__open_cache_file_without_file(self):
-        result = self.finder.open_cache_file()
-        assert result is False
-
-    def test__open_cache_file(self):
-        self.do_parse()
-
-        result = self.finder.open_cache_file()
-        assert result is True
-
-        with open('.btt_cache.json') as file:
-            data = json.load(file)
-        assert data == self.finder._files_structure
 
     def test__generate_regex(self):
         expected = (
@@ -58,7 +42,6 @@ class TestFinder:
             'file-fixtures/unit/server/test_config_server.py'
         }
         self.do_parse()
-        self.finder.open_cache_file()
         result = set(self.finder.finds_modules('config_server'))
         assert result == matched_modules
 

@@ -12,26 +12,17 @@ class Finder(object):
     """
     The class searches for the corresponding modules, generates a list of options
     """
-    _cache_file = utils.CACHE_FILE_PATH
+    def __getattr__(self, item):
+        # lazy loading of data from the cache
+        if item == '_files_structure':
+            if os.path.exists(utils.CACHE_FILENAME):
+                with open(utils.CACHE_FILENAME) as file:
+                    self._files_structure = json.load(file)
+            else:
+                color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
+                sys.exit(1)
 
-    def __init__(self):
-        self._files_structure = None
-
-    def open_cache_file(self):
-        """
-        Loads a cache file if is exists or return an error message
-        :return bool:
-        """
-        if isinstance(self._files_structure, dict):
-            return True
-
-        if os.path.exists(self._cache_file):
-            with open(self._cache_file) as file:
-                self._files_structure = json.load(file)
-            return True
-
-        color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
-        return False
+        return self.__dict__.get(item)
 
     def _generate_regex(self, simplified_path):
         """
@@ -66,7 +57,6 @@ class Finder(object):
         :param str simplified_path: config_server
         :return:
         """
-        self.open_cache_file()
         modules = self.finds_modules(simplified_path)
 
         if not modules:
@@ -140,12 +130,11 @@ class NoseTestsLauncher(object):
         :param str simplified_path:
         :return str: a generated command
         """
-        if self.finder.open_cache_file():
-            modules = self.finder.finds_modules(simplified_path)
-            module_filepath = self.finder.module_selection_and_generate_command(modules)
+        modules = self.finder.finds_modules(simplified_path)
+        module_filepath = self.finder.module_selection_and_generate_command(modules)
 
-            if module_filepath:
-                return self.command_template.format(filepath=module_filepath)
+        if module_filepath:
+            return self.command_template.format(filepath=module_filepath)
 
     def run(self, simplified_path):
         """
@@ -153,7 +142,6 @@ class NoseTestsLauncher(object):
         :param str simplified_path:
         :return:
         """
-        if self.finder.open_cache_file():
-            command = self.generate(simplified_path)
-            if command:
-                color_output.succes('Run {}'.format(command))
+        command = self.generate(simplified_path)
+        if command:
+            color_output.succes('Run {}'.format(command))

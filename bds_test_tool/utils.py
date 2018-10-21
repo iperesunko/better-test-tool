@@ -1,4 +1,3 @@
-import os
 import sys
 from timeit import default_timer as timer
 
@@ -32,8 +31,6 @@ class ColorOutput:
 
 # File configuration for caching
 CACHE_FILENAME = '.btt_cache.json'
-WORK_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-CACHE_FILE_PATH = os.path.join(WORK_DIRECTORY, CACHE_FILENAME)
 
 
 def search_statistics(func):

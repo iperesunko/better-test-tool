@@ -81,7 +81,7 @@ class ParserTests:
     The class contains commands for parsing the structure of tests,
     saving to the cache and displaying it on the screen
     """
-    _cache_file = utils.CACHE_FILE_PATH
+    _cache_file = utils.CACHE_FILENAME
 
     def __init__(self):
         self.file_scaner = FilesScaner()
@@ -100,12 +100,10 @@ class ParserTests:
             color_output.warning('Nothing to parse - no test files\n')
             return
 
-        color_output.info('Number of test files: {}\n'.format(len(self.file_scaner.files)))
-
         for filepath in self.file_scaner.files:
             self._test_files_structure[filepath] = self.file_parser.parse_file(filepath)
 
-        color_output.succes('Parsing is completed\n')
+        color_output.succes('Parsing completed. Found {} files.\n'.format(len(self.file_scaner.files)))
 
         if not without_caching:
             self._saves_cache()
@@ -132,5 +130,3 @@ class ParserTests:
         """
         with open(self._cache_file, 'w') as outfile:
             json.dump(self._test_files_structure, outfile)
-
-        color_output.info('Tests structure was cached\n')
