@@ -51,20 +51,6 @@ class Finder(object):
 
         return matching
 
-    def find(self, simplified_path):
-        """
-        Shows all files that matched by pattern
-        :param str simplified_path: config_server
-        :return:
-        """
-        modules = self.finds_modules(simplified_path)
-
-        if not modules:
-            color_output.warning('No matches found.\n')
-        else:
-            formatted = utils.format_multuple_modules(modules) + '\n'
-            color_output.info(formatted)
-
     def read_user_answer(self, _range):
         """
         With several options - asks the user to select the desired option
@@ -140,7 +126,7 @@ class NoseTestsLauncher(BaseLauncher):
     """
 
     def __init__(self):
-        super(NoseTestsLauncher,self).__init__()
+        super(NoseTestsLauncher, self).__init__()
         self.command_template = 'nosetests -svv {filepath}'
 
 
@@ -148,6 +134,7 @@ class PytestLauncher(BaseLauncher):
     """
     The class implements an interface for interacting with pytest to generate commands
     """
+
     def __init__(self):
         super(PytestLauncher, self).__init__()
         self.command_template = 'pytest {filepath} -v'
