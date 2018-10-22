@@ -16,7 +16,8 @@ class TestFinder:
         if os.path.exists('.btt_cache.json'):
             os.remove('.btt_cache.json')
 
-    def do_parse(self):
+    @staticmethod
+    def do_parse():
         parser = ParserTests()
         parser.parse('file-fixtures')
 

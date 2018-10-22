@@ -143,3 +143,6 @@ pip-selfcheck.json
 ### VisualStudioCode ###
 .vscode/
 *.json
+
+### BTT
+.btt_cache.json
