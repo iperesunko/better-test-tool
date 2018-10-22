@@ -2,6 +2,7 @@
 
 ### Requirements:
 - Python >= 2.7 (better working on Python >= 3.5)
+- pytest (for develop)
 
 ## Setup and usages
 ```bash

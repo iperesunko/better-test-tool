@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pytest
 
@@ -47,7 +48,7 @@ class TestFinder:
         captured = capsys.readouterr()
         assert 'Cache file not found. First run the command "btt parse folderpath"\n' in captured.err
 
-    def test__finds_modules(self):
+    def test_finds_modules(self):
         matched_modules = {
             'file-fixtures/test_config_server.py',
             'file-fixtures/unit/server/test_config_server.py'
@@ -73,3 +74,42 @@ class TestFinder:
 
         result = set(self.finder.finds_modules('skl2'))
         assert result == set()
+
+    def test_module_selection_many_items(self, capsys):
+        large_list = [i for i in range(11)]
+        result = self.finder.module_selection(large_list)
+        captured = capsys.readouterr()
+
+        assert result is False
+        assert 'Too many suggestions. Please enter a more specific query\n' in captured.err
+
+    def test_module_selection_one_item(self):
+        result = self.finder.module_selection(['one'])
+        assert result == 'one'
+
+    def test_module_selection_no_modules(self, capsys):
+        result = self.finder.module_selection([])
+        captured = capsys.readouterr()
+
+        assert result is False
+        assert 'No matches found.\n' in captured.err
+
+    def test_module_selection_several_items(self, capsys, monkeypatch):
+        fake_modules = [
+            'one',
+            'two',
+            'three',
+            'four',
+            'five'
+        ]
+
+        # mocking a stdin readline method
+        def fake_stdin():
+            return '4'
+        monkeypatch.setattr(sys.stdin, 'readline', fake_stdin)
+
+        result = self.finder.module_selection(fake_modules)
+        captured = capsys.readouterr()
+
+        assert result == 'four'
+        assert 'Several modules were found, select the required one:\n' in captured.out

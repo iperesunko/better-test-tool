@@ -89,7 +89,7 @@ class Finder(object):
                 else:
                     color_output.warning('This is not a digit. Please enter the answer again\n')
 
-    def module_selection_and_generate_command(self, modules):
+    def module_selection(self, modules):
         """
         Displays the list of modules on the screen. If more than 10 options -
         asks the user to select the desired one
@@ -128,7 +128,7 @@ class BaseLauncher(object):
         :return str: a generated command
         """
         modules = self.finder.finds_modules(simplified_path)
-        module_filepath = self.finder.module_selection_and_generate_command(modules)
+        module_filepath = self.finder.module_selection(modules)
 
         if module_filepath:
             return self.command_template.format(filepath=module_filepath)
