@@ -28,6 +28,10 @@ class ColorOutput:
         """Displays info messages in the console"""
         sys.stderr.write(self.blue + text + self.reset)
 
+    def standard(self, text):
+        """Displays standard messages in the console"""
+        sys.stdout.write(text)
+
 
 # File configuration for caching
 CACHE_FILENAME = '.btt_cache.json'

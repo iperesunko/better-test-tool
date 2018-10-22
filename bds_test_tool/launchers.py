@@ -35,7 +35,6 @@ class Finder(object):
         raw = ''.join(['.*{}.*'.format(word) for word in splitted])
         return raw.replace('.*.*', '.*')
 
-    @utils.search_statistics
     def finds_modules(self, simplified_path):
         """
         Finds modules that matched by regex pattern
@@ -105,7 +104,7 @@ class Finder(object):
         elif 1 < modules_number <= 10:
             formatted = utils.format_multuple_modules(modules)
             message = 'Several modules were found, select the required one:\n' + formatted
-            color_output.info(message + '\n')
+            color_output.standard(message + '\n')
 
             result = self.read_user_answer(modules_number)
             module_path = modules[result - 1]
@@ -141,7 +140,7 @@ class NoseTestsLauncher(BaseLauncher):
     """
 
     def __init__(self):
-        super(NoseTestsLauncher).__init__()
+        super(NoseTestsLauncher,self).__init__()
         self.command_template = 'nosetests -svv {filepath}'
 
 
@@ -150,7 +149,7 @@ class PytestLauncher(BaseLauncher):
     The class implements an interface for interacting with pytest to generate commands
     """
     def __init__(self):
-        super(PytestLauncher).__init__()
+        super(PytestLauncher, self).__init__()
         self.command_template = 'pytest {filepath} -v'
 
 
