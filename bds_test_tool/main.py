@@ -13,7 +13,7 @@ def main():
         file_parser.parse(args.path)
     else:
         launcher = AbstractFabricLauncher(args.command)
-        return launcher.generate(args.path)
+        return launcher.generate(module_path=args.path, method=args.method)
 
 
 if __name__ == '__main__':

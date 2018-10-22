@@ -75,26 +75,50 @@ class TestFinder:
         result = set(self.finder.finds_modules('skl2'))
         assert result == set()
 
-    def test_module_selection_many_items(self, capsys):
+    def test_find_tests(self):
+        expected_tests = {
+            'TestConfigServer test_one_case',
+            'TestConfigServer test_alpha_settings',
+            'functions test_configuration'
+        }
+        self.do_parse()
+        result = self.finder.find_tests(
+            'file-fixtures/test_config_server.py',
+            'test'
+        )
+        assert set(result) == expected_tests
+
+        expected_tests = {
+            'TestFunctional test_one_case',
+            'TestFunctional test_other_case',
+            'functions test_case_without_class'
+        }
+        result = self.finder.find_tests(
+            'file-fixtures/test_some_func.py',
+            'case'
+        )
+        assert set(result) == expected_tests
+
+    def test_item_selection_many_items(self, capsys):
         large_list = [i for i in range(11)]
-        result = self.finder.module_selection(large_list)
+        result = self.finder.item_selection(large_list)
         captured = capsys.readouterr()
 
         assert result is False
         assert 'Too many suggestions. Please enter a more specific query\n' in captured.err
 
-    def test_module_selection_one_item(self):
-        result = self.finder.module_selection(['one'])
+    def test_item_selection_one_item(self):
+        result = self.finder.item_selection(['one'])
         assert result == 'one'
 
-    def test_module_selection_no_modules(self, capsys):
-        result = self.finder.module_selection([])
+    def test_item_selection_no_modules(self, capsys):
+        result = self.finder.item_selection([])
         captured = capsys.readouterr()
 
         assert result is False
         assert 'No matches found.\n' in captured.err
 
-    def test_module_selection_several_items(self, capsys, monkeypatch):
+    def test_item_selection_several_items(self, capsys, monkeypatch):
         fake_modules = [
             'one',
             'two',
@@ -106,9 +130,10 @@ class TestFinder:
         # mocking a stdin readline method
         def fake_stdin():
             return '4'
+
         monkeypatch.setattr(sys.stdin, 'readline', fake_stdin)
 
-        result = self.finder.module_selection(fake_modules)
+        result = self.finder.item_selection(fake_modules)
         captured = capsys.readouterr()
 
         assert result == 'four'
