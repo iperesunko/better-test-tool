@@ -1,5 +1,6 @@
-import json
 import os
+
+import pytest
 
 from bds_test_tool.launchers import Finder
 from bds_test_tool.parser import ParserTests
@@ -35,6 +36,16 @@ class TestFinder:
 
         for path, expect in zip(data, expected):
             assert expect == self.finder._generate_regex(path)
+
+    def test_cache_load_ok(self):
+        self.do_parse()
+        assert hasattr(self.finder, '_files_structure') is True
+
+    def test_cache_load_without_cache(self, capsys):
+        with pytest.raises(SystemExit):
+            hasattr(self.finder, '_files_structure')
+        captured = capsys.readouterr()
+        assert 'Cache file not found. First run the command "btt parse folderpath"\n' in captured.err
 
     def test__finds_modules(self):
         matched_modules = {

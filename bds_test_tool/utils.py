@@ -22,11 +22,11 @@ class ColorOutput:
 
     def succes(self, text):
         """Displays success messages in the console"""
-        sys.stderr.write(self.green + text + self.reset)
+        sys.stdout.write(self.green + text + self.reset)
 
     def info(self, text):
         """Displays info messages in the console"""
-        sys.stderr.write(self.blue + text + self.reset)
+        sys.stdout.write(self.blue + text + self.reset)
 
     def standard(self, text):
         """Displays standard messages in the console"""
@@ -51,7 +51,7 @@ def search_statistics(func):
 
         execute_time = end_time - start_time
         message = '\033[32mFound results: {} in {:f} seconds\n\n\033[0m'.format(len(results), execute_time)
-        sys.stderr.write(message)
+        sys.stdout.write(message)
 
         return results
 
