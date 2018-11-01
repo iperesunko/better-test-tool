@@ -1,7 +1,7 @@
 import os
 import sys
 
-from bds_test_tool.launchers import BaseLauncher
+from better_test_tool.launchers import BaseLauncher
 from tests.launchers.test_finder import TestFinder
 
 

@@ -1,6 +1,6 @@
 import argparse
 
-from bds_test_tool.parser import ParserTests
+from better_test_tool.parser import ParserTests
 
 file_parser = ParserTests()
 

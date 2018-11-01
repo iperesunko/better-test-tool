@@ -1,4 +1,4 @@
-# BDS Test Tool
+# Better Test Tool
 
 ### Requirements:
 - Python >= 2.7 (better working on Python >= 3.5)

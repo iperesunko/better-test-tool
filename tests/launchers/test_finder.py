@@ -3,8 +3,8 @@ import sys
 
 import pytest
 
-from bds_test_tool.launchers import Finder
-from bds_test_tool.parser import ParserTests
+from better_test_tool.launchers import Finder
+from better_test_tool.parser import ParserTests
 
 
 class TestFinder:

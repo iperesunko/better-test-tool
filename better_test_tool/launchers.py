@@ -3,7 +3,7 @@ import os
 import re
 import sys
 
-from bds_test_tool import utils
+from better_test_tool import utils
 
 color_output = utils.ColorOutput()
 

@@ -1,7 +1,7 @@
 import json
 import os
 
-from bds_test_tool.parser import FilesParser, FilesScaner, ParserTests
+from better_test_tool.parser import FilesParser, FilesScaner, ParserTests
 
 
 class TestFilesScaner:
