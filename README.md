@@ -1,8 +1,12 @@
-# Better Test Tool
+# Better Test Tool (Utility for simple testing projects)
+
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/iperesunko/better-test-tool)
+
 
 ### Requirements:
 - Python >= 2.7 (better working on Python >= 3.5)
-- pytest (for develop)
+- [pyperclip](https://pypi.org/project/pyperclip/)
+- pytest (for developing)
 
 ## Setup and usages
 ```bash
@@ -21,6 +25,7 @@ $ btt --help
 - **pytest** - generates a command for manual execute in pytest
 - optional arguments
     - **--method or -m** - used with runners (nosetests or pytest commands). allows you to specify the name of the test case 
+    - **--copy or -cp** - copy result to clipboard
 
 > If several matches are found with the names, you will be offered the choice of a module and a test case.
 
