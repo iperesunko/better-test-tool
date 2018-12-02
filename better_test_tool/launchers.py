@@ -108,8 +108,7 @@ class Finder(object):
             return False
         elif 1 < modules_number <= 10:
             formatted = utils.format_multuple_modules(items)
-            message = ('Several {} were found, select the required one:\n'.format(target)
-                       + formatted)
+            message = 'Several {} were found, select the required one:\n'.format(target) + formatted
             color_output.standard(message + '\n')
 
             result = self.read_user_answer(modules_number)
@@ -195,9 +194,7 @@ class PytestLauncher(BaseLauncher):
 
 
 class AbstractFabricLauncher(object):
-    launchers = {
-        'nosetests': NoseTestsLauncher(),
-        'pytest': PytestLauncher()}
+    launchers = {'nosetests': NoseTestsLauncher(), 'pytest': PytestLauncher()}
 
     def __init__(self, launcher):
         self.launcher = self.launchers.get(launcher)

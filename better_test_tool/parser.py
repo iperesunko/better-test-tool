@@ -9,7 +9,6 @@ color_output = utils.ColorOutput()
 
 
 class FilesScaner(object):
-
     def __init__(self, pref='test_', suff='.py'):
         self.pref = pref
         self.suff = suff
@@ -81,6 +80,7 @@ class ParserTests:
     The class contains commands for parsing the structure of tests,
     saving to the cache and displaying it on the screen
     """
+
     _cache_file = utils.CACHE_FILENAME
 
     def __init__(self):
