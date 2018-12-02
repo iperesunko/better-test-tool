@@ -41,9 +41,9 @@ class FilesScaner(object):
 
 
 class FilesParser(object):
-    re_class = re.compile(r'class (\w+)')
-    re_method = re.compile(r'\s+def (\w+)')
-    re_function = re.compile(r'def (\w+)')
+    re_class = re.compile(r'^class (\w+)')
+    re_method = re.compile(r'^\s{4}def (\w+)\(self')
+    re_function = re.compile(r'^def (\w+)')
 
     def parse_file(self, path):
         """
