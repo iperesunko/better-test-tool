@@ -1,6 +1,8 @@
 import sys
 from timeit import default_timer as timer
 
+import pkg_resources
+
 
 class ColorOutput:
     """
@@ -66,3 +68,11 @@ def format_multuple_modules(modules):
     :return str:
     """
     return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])
+
+
+def get_version():
+    """
+    Returns a utility version
+    :return str: '0.5'
+    """
+    return pkg_resources.require('better_test_tool')[0].version

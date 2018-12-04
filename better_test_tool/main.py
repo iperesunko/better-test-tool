@@ -3,7 +3,7 @@ import pyperclip
 from better_test_tool.argument_parser import cli_parser
 from better_test_tool.launchers import AbstractFabricLauncher
 from better_test_tool.parser import ParserTests
-from better_test_tool.utils import ColorOutput
+from better_test_tool.utils import ColorOutput, get_version
 
 color_output = ColorOutput()
 file_parser = ParserTests()
@@ -11,7 +11,11 @@ file_parser = ParserTests()
 
 def main():
     args = cli_parser.parse_args()
-    if args.command == 'parse':
+    if args.version:
+        return color_output.info('Better test tool {}\n'.format(get_version()))
+    elif not args.command:
+        return cli_parser.print_help()
+    elif args.command == 'parse':
         file_parser.parse(args.path)
     else:
         launcher = AbstractFabricLauncher(args.command)
