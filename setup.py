@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.5'
+VERSION = '0.6'
 
 setup(
     name="better_test_tool",
@@ -11,7 +11,7 @@ setup(
     url="https://github.com/iperesunko/better-test-tool",
     packages=find_packages(exclude=['tests', 'file-fixtures']),
     entry_points={
-        'console_scripts': ['btt=better_test_tool.main:main'],
+        'console_scripts': ['btt=better_test_tool.cli:cli'],
     },
-    install_requires=['pyperclip']
+    install_requires=['Click', 'pyperclip']
 )

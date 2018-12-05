@@ -191,13 +191,3 @@ class PytestLauncher(BaseLauncher):
         self.command_template = 'pytest {target} -v'
         self.module_separator = '::'
         self.test_case_separator = '::'
-
-
-class AbstractFabricLauncher(object):
-    launchers = {'nosetests': NoseTestsLauncher(), 'pytest': PytestLauncher()}
-
-    def __init__(self, launcher):
-        self.launcher = self.launchers.get(launcher)
-
-    def generate(self, module_path, method=None):
-        return self.launcher.generate(module_path, method)
