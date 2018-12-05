@@ -1,5 +1,7 @@
+import json
 import os
 import sys
+import time
 
 import pytest
 
@@ -37,6 +39,19 @@ class TestFinder:
             hasattr(self.finder, '_files_structure')
         captured = capsys.readouterr()
         assert 'Cache file not found. First run the command "btt parse folderpath"\n' in captured.err
+
+    def test_cache_auto_update(self):
+        self.do_parse()
+        with open('.btt_cache.json', 'r') as file:
+            test_data = json.load(file)
+
+        rigth_time = test_data.get('m_time')
+        new_time = {'m_time': time.time()}
+        test_data.update(new_time)
+        with open('.btt_cache.json', 'w') as file:
+            json.dump(test_data, file)
+
+        assert rigth_time == self.finder._files_structure.get('m_time')
 
     def test_finds_modules(self):
         matched_modules = {'file-fixtures/test_config_server.py', 'file-fixtures/unit/server/test_config_server.py'}

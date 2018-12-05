@@ -4,6 +4,7 @@ import re
 import sys
 
 from better_test_tool import utils
+from better_test_tool.parser import ParserTests
 
 color_output = utils.ColorOutput()
 
@@ -13,12 +14,28 @@ class Finder(object):
     The class searches for the corresponding modules, generates a list of options
     """
 
+    def cache_update(self, test_folder):
+        """
+        Updates the test structure
+        :param test_folder: path to test folder
+        :return dict: a new test structure
+        """
+        parser = ParserTests()
+        parser.parse(test_folder)
+        return parser._test_files_structure
+
     def __getattr__(self, item):
         # lazy loading of data from the cache
         if item == '_files_structure':
             if os.path.exists(utils.CACHE_FILENAME):
                 with open(utils.CACHE_FILENAME) as file:
                     self._files_structure = json.load(file)
+
+                # automatic update cache
+                m_time = self._files_structure.get('m_time')
+                test_folder = self._files_structure.get('test_folder')
+                if utils.is_folder_modified(m_time, test_folder):
+                    self._files_structure = self.cache_update(self._files_structure.get('test_folder'))
             else:
                 color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
                 sys.exit(1)

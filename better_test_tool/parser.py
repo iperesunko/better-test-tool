@@ -95,10 +95,7 @@ class ParserTests:
         :param str folder_path: path to target folder
         :return int: number of found test files
         """
-        if not os.path.exists(folder_path):
-            raise ValueError('Path does not exists')
-        elif not os.path.isdir(folder_path):
-            raise ValueError('This is not a folder')
+        utils.check_test_folder(folder_path)
         m_time = self.file_scaner.scan(folder_path)
 
         if not self.file_scaner.files:
