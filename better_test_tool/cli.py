@@ -18,10 +18,16 @@ def cli():
 
 
 @cli.command()
-@click.argument('path')
+@click.argument('path', type=click.Path(exists=True))
 def parse(path):
     file_parser = ParserTests()
-    file_parser.parse(path)
+    try:
+        files_number = file_parser.parse(path)
+    except ValueError as error:
+        click.secho(str(error), fg='red')
+        return
+    else:
+        click.secho('Parsing completed. Found {} files.'.format(files_number), fg='green')
 
 
 @cli.command()

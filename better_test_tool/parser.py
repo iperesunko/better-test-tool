@@ -5,8 +5,6 @@ from collections import defaultdict
 
 from better_test_tool import utils
 
-color_output = utils.ColorOutput()
-
 
 class FilesScaner(object):
     def __init__(self, pref='test_', suff='.py'):
@@ -18,14 +16,17 @@ class FilesScaner(object):
         """
         Scans the directory and selects files according to the specified criteria
         :param str path: test/unit/test_config.py
-        :return:
+        :return float: modification time of folder
         """
         found_files = os.walk(path)
+        modification_time = os.stat(path).st_mtime
 
         for dirpath, _, filenames in found_files:
             for _file in filenames:
                 if self.files_filter(_file):
                     self.files.append(os.path.join(dirpath, _file))
+
+        return modification_time
 
     def files_filter(self, file):
         """
@@ -88,40 +89,28 @@ class ParserTests:
         self.file_parser = FilesParser()
         self._test_files_structure = {}
 
-    def parse(self, folder_path, without_caching=False):
+    def parse(self, folder_path):
         """
         Searches for test files and parses them
         :param str folder_path: path to target folder
-        :param bool without_caching:
+        :return int: number of found test files
         """
-        self.file_scaner.scan(folder_path)
+        if not os.path.exists(folder_path):
+            raise ValueError('Path does not exists')
+        elif not os.path.isdir(folder_path):
+            raise ValueError('This is not a folder')
+        m_time = self.file_scaner.scan(folder_path)
 
         if not self.file_scaner.files:
-            color_output.warning('Nothing to parse - no test files\n')
-            return
+            raise ValueError('Nothing to parse - no test files')
 
         for filepath in self.file_scaner.files:
             self._test_files_structure[filepath] = self.file_parser.parse_file(filepath)
 
-        color_output.succes('Parsing completed. Found {} files.\n'.format(len(self.file_scaner.files)))
+        self._test_files_structure.update({'m_time': m_time, 'test_folder': folder_path})
+        self._saves_cache()
 
-        if not without_caching:
-            self._saves_cache()
-
-    def show_test_structure(self):
-        """
-        Displays a list of parsed files or an error message
-        :return:
-        """
-        if os.path.exists(self._cache_file):
-            with open(self._cache_file) as file:
-                data = json.load(file)
-
-            files = data.keys()
-            formatted = utils.format_multuple_modules(files) + '\n'
-            color_output.info(formatted)
-        else:
-            color_output.warning('Nothing to show. Before call this command run the "parse" command\n')
+        return len(self.file_scaner.files)
 
     def _saves_cache(self):
         """

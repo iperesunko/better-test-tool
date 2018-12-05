@@ -22,12 +22,21 @@ class TestCLI:
     def test_parse(self):
         result = self.runner.invoke(parse, 'file-fixtures')
         assert result.exit_code == 0
-        assert 'Parsing completed. Found 4 files.\n' in result.output
+        assert 'Parsing completed. Found 4 files.\n' == result.output
 
-    def test_parse_no_test_filess(self):
-        result = self.runner.invoke(parse, 'better-test-tool')
+    def test_parse_no_test_files(self):
+        result = self.runner.invoke(parse, 'better_test_tool')
         assert result.exit_code == 0
-        assert 'Nothing to parse - no test files\n' in result.output
+        assert 'Nothing to parse - no test files\n' == result.output
+
+    def test_parse_folder_do_not_exists(self):
+        result = self.runner.invoke(parse, 'better-test-tool')
+        assert result.exit_code == 2
+
+    def test_parse_not_a_folder(self):
+        result = self.runner.invoke(parse, 'README.md')
+        assert result.exit_code == 0
+        assert 'This is not a folder\n' == result.output
 
     def test_nosetests(self):
         self.runner.invoke(parse, 'file-fixtures')

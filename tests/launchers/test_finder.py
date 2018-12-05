@@ -8,7 +8,6 @@ from better_test_tool.parser import ParserTests
 
 
 class TestFinder:
-
     def setup_method(self, method):
         self.finder = Finder()
 
@@ -22,19 +21,9 @@ class TestFinder:
         parser.parse('file-fixtures')
 
     def test__generate_regex(self):
-        expected = (
-            '.*unit.*',
-            '.*extract.*pstn.*',
-            '.*.py.*',
-            '.*regress.*transf.*cme.*'
-        )
+        expected = ('.*unit.*', '.*extract.*pstn.*', '.*.py.*', '.*regress.*transf.*cme.*')
 
-        data = (
-            'unit',
-            'extract pstn',
-            '.py',
-            'regress transf cme'
-        )
+        data = ('unit', 'extract pstn', '.py', 'regress transf cme')
 
         for path, expect in zip(data, expected):
             assert expect == self.finder._generate_regex(path)
@@ -50,10 +39,7 @@ class TestFinder:
         assert 'Cache file not found. First run the command "btt parse folderpath"\n' in captured.err
 
     def test_finds_modules(self):
-        matched_modules = {
-            'file-fixtures/test_config_server.py',
-            'file-fixtures/unit/server/test_config_server.py'
-        }
+        matched_modules = {'file-fixtures/test_config_server.py', 'file-fixtures/unit/server/test_config_server.py'}
         self.do_parse()
         result = set(self.finder.finds_modules('config_server'))
         assert result == matched_modules
@@ -80,24 +66,18 @@ class TestFinder:
         expected_tests = {
             'TestConfigServer test_one_case',
             'TestConfigServer test_alpha_settings',
-            'functions test_configuration'
+            'functions test_configuration',
         }
         self.do_parse()
-        result = self.finder.find_tests(
-            'file-fixtures/test_config_server.py',
-            'test'
-        )
+        result = self.finder.find_tests('file-fixtures/test_config_server.py', 'test')
         assert set(result) == expected_tests
 
         expected_tests = {
             'TestFunctional test_one_case',
             'TestFunctional test_other_case',
-            'functions test_case_without_class'
+            'functions test_case_without_class',
         }
-        result = self.finder.find_tests(
-            'file-fixtures/test_some_func.py',
-            'case'
-        )
+        result = self.finder.find_tests('file-fixtures/test_some_func.py', 'case')
         assert set(result) == expected_tests
 
     def test_item_selection_many_items(self, capsys):
@@ -120,13 +100,7 @@ class TestFinder:
         assert 'No matches found.\n' in captured.err
 
     def test_item_selection_several_items(self, capsys, monkeypatch):
-        fake_modules = [
-            'one',
-            'two',
-            'three',
-            'four',
-            'five'
-        ]
+        fake_modules = ['one', 'two', 'three', 'four', 'five']
 
         # mocking a stdin readline method
         def fake_stdin():
