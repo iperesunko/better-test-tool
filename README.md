@@ -1,8 +1,8 @@
-# Better Test Tool (Utility for simple testing projects)
+# Better Test Tool: Utility for simple testing projects
 
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/iperesunko/better-test-tool)
 
-[](demo.gif)
+![](https://media.giphy.com/media/elMZLkephFAIobrgIS/giphy.gif)
 
 ## Description
 
