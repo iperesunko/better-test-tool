@@ -2,15 +2,25 @@
 
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/iperesunko/better-test-tool)
 
+[](demo.gif)
 
-### Requirements:
-- Python >= 2.7 (better working on Python >= 3.5)
-- [pyperclip](https://pypi.org/project/pyperclip/)
-- pytest (for developing)
+## Description
 
-## Setup and usages
+Helps generate commands for running specific tests
+
+Supports pytest and nose
+
+Supports Python 2.7 and Python >= 3.5
+
+Tested on Linux
+
+## Installation
 ```bash
+$ git clone https://github.com/iperesunko/better-test-tool.git
 $ python setup.py install --user
+
+# or
+$ pip install git+https://github.com/iperesunko/better-test-tool.git --user
 ```
 
 > Add the cache file (.btt-cache.json) to **.gitignore** (must be committed) or add to the exclusion file **.git/info/exclude** in project folder
