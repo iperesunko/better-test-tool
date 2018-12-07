@@ -22,7 +22,7 @@ class Finder(object):
         """
         parser = ParserTests()
         parser.parse(test_folder)
-        return parser._test_files_structure
+        return parser.test_files_structure
 
     def __getattr__(self, item):
         # lazy loading of data from the cache
@@ -120,8 +120,7 @@ class Finder(object):
         modules_number = len(items)
 
         if modules_number > 10:
-            click.secho('Too many suggestions. Please enter a more specific query', fg='blue')
-            return False
+            raise utils.BTTError('Too many suggestions. Please enter a more specific query', color='blue')
         elif 1 < modules_number <= 10:
             formatted = utils.format_multuple_modules(items)
             message = 'Several {} were found, select the required one:\n'.format(target) + formatted
@@ -132,7 +131,7 @@ class Finder(object):
         elif modules_number == 1:
             module_path = items[0]
         else:
-            raise utils.BTTError('No matches found.')
+            raise utils.BTTError('No matches found.', color='blue')
 
         return module_path
 

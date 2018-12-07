@@ -84,11 +84,11 @@ class TestParserTests:
     def test_parse(self):
         self.parser_test.parse('file-fixtures')
         assert os.path.exists('.btt_cache.json') is True
-        assert self.parser_test._test_files_structure == self.parsed_structure
+        assert self.parser_test.test_files_structure == self.parsed_structure
 
         with open('.btt_cache.json') as file:
             data = json.load(file)
-        assert data == self.parsed_structure and data == self.parser_test._test_files_structure
+        assert data == self.parsed_structure and data == self.parser_test.test_files_structure
 
     def test_parse_not_a_folder(self):
         with pytest.raises(BTTError):

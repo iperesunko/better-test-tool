@@ -4,9 +4,10 @@ import pkg_resources
 
 
 class BTTError(Exception):
-    def __init__(self, message):
+    def __init__(self, message, color='red'):
         super(Exception, self).__init__()
         self.message = message
+        self.color = color
 
     def __str__(self):
         return self.message

@@ -42,12 +42,12 @@ eval "$(_BTT_COMPLETE=source_zsh btt)"
 $ btt --help
 ```
 
-- **parse** - parses a test folder structure and cache it (the command must be called at the first use and/or when the test structure has changed)
+- **parse** - parses a test folder structure and cache it
 - **nosetests** - generates a command for manual execute in nosetests
 - **pytest** - generates a command for manual execute in pytest
 - optional arguments
-    - **--method or -m** - used with runners (nosetests or pytest commands). allows you to specify the name of the test case 
-    - **--copy or -cp** - copy result to clipboard
+    - **-m ,--method** - used with runners (nosetests or pytest commands). Allows you to specify the name of the test case 
+    - **-cp, --copy** - copy result to clipboard
 
 > If several matches are found with the names, you will be offered the choice of a module and a test case.
 
@@ -67,4 +67,9 @@ pytest test/functional/test_config_server.py -v
 
 $ btt pytest "db utils" -m "close conn"
 pytest test/test_db_utils.py::TestBackendConnectionFabric::test_open_close_postgre_connection -v
+
+$ btt pytest "unit config" -cp
+Copied to clipboard
+pytest file-fixtures/unit/server/test_config_server.py -v
+# press Ctrl+V for paste a saved command
 ```

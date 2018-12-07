@@ -87,7 +87,7 @@ class ParserTests:
     def __init__(self):
         self.file_scaner = FilesScaner()
         self.file_parser = FilesParser()
-        self._test_files_structure = {}
+        self.test_files_structure = {}
 
     def parse(self, folder_path):
         """
@@ -102,9 +102,9 @@ class ParserTests:
             raise utils.BTTError('Nothing to parse - no test files')
 
         for filepath in self.file_scaner.files:
-            self._test_files_structure[filepath] = self.file_parser.parse_file(filepath)
+            self.test_files_structure[filepath] = self.file_parser.parse_file(filepath)
 
-        self._test_files_structure.update({'m_time': m_time, 'test_folder': folder_path})
+        self.test_files_structure.update({'m_time': m_time, 'test_folder': folder_path})
         self._saves_cache()
 
         return len(self.file_scaner.files)
@@ -115,4 +115,4 @@ class ParserTests:
         :return:
         """
         with open(self._cache_file, 'w') as outfile:
-            json.dump(self._test_files_structure, outfile)
+            json.dump(self.test_files_structure, outfile)

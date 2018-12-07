@@ -96,11 +96,8 @@ class TestFinder:
 
     def test_item_selection_many_items(self, capsys):
         large_list = [i for i in range(11)]
-        result = self.finder.item_selection(large_list)
-        captured = capsys.readouterr()
-
-        assert result is False
-        assert 'Too many suggestions. Please enter a more specific query\n' in captured.out
+        with pytest.raises(BTTError):
+            self.finder.item_selection(large_list)
 
     def test_item_selection_one_item(self):
         result = self.finder.item_selection(['one'])
@@ -108,7 +105,7 @@ class TestFinder:
 
     def test_item_selection_no_modules(self, capsys):
         with pytest.raises(BTTError):
-            result = self.finder.item_selection([])
+            self.finder.item_selection([])
 
     def test_item_selection_several_items(self, capsys, monkeypatch):
         fake_modules = ['one', 'two', 'three', 'four', 'five']
