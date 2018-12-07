@@ -23,6 +23,18 @@ $ python setup.py install --user
 $ pip install git+https://github.com/iperesunko/better-test-tool.git --user
 ```
 
+### Autocompletion
+For bash users add this to your `.bashrc`:
+```sh
+eval "$(_BTT_COMPLETE=source btt)"
+```
+
+For zsh users add this to your `.zshrc`:
+
+```sh
+eval "$(_BTT_COMPLETE=source_zsh btt)"
+```
+
 > Add the cache file (.btt-cache.json) to **.gitignore** (must be committed) or add to the exclusion file **.git/info/exclude** in project folder
 
 ## Commands:

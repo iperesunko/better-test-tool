@@ -65,3 +65,64 @@ def get_folder_time(test_folder):
     """
     check_test_folder(test_folder)
     return os.stat(test_folder).st_mtime
+
+
+def is_access(path):
+    """
+
+    :param path:
+    :return:
+    """
+    if not os.access(path, os.R_OK):
+        return False
+
+    return True
+
+
+def get_dirs(path):
+    """
+    Returns a list with folders
+    :param str path:
+    :return list: list of dirs
+    """
+    dirs = []
+    for x in os.listdir(path):
+        if is_access(x) and os.path.isdir(x):
+            dirs.append(x)
+    return dirs
+
+
+def get_search_word():
+    """
+    Return a last COMP_WORDS item
+    :return str or bool: item or False
+    """
+    word = os.environ['COMP_WORDS'].split()[2:]
+    if not word:
+        return False
+
+    return word[0]
+
+
+def filter_folders(folders, word):
+    items = []
+    for folder in folders:
+        if os.path.normcase(folder).startswith(word):
+            items.append(folder)
+    return items
+
+
+def auto_complete_paths(ctx, args, incomplete):
+    """
+    Prompts folder names in the current directory
+    :param ctx: click context
+    :param args: command arguments
+    :param incomplete:
+    :return list: matching folder list
+    """
+    folder_list = get_dirs('.')
+    search_word = get_search_word()
+    if not search_word:
+        return folder_list
+    else:
+        return filter_folders(folder_list, search_word)

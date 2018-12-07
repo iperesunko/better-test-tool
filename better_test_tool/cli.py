@@ -3,7 +3,7 @@ import pyperclip
 
 from better_test_tool.launchers import NoseTestsLauncher, PytestLauncher
 from better_test_tool.parser import ParserTests
-from better_test_tool.utils import BTTError, get_version
+from better_test_tool.utils import BTTError, auto_complete_paths, get_version
 
 
 def copy_to_clipboard(result):
@@ -18,7 +18,7 @@ def cli():
 
 
 @cli.command()
-@click.argument('path', type=click.Path(exists=True))
+@click.argument('path', type=click.Path(exists=True), autocompletion=auto_complete_paths)
 def parse(path):
     file_parser = ParserTests()
     try:
