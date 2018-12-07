@@ -4,6 +4,7 @@ import os
 import pytest
 
 from better_test_tool.parser import FilesParser, FilesScaner, ParserTests
+from better_test_tool.utils import BTTError
 
 
 class TestFilesScaner:
@@ -90,9 +91,9 @@ class TestParserTests:
         assert data == self.parsed_structure and data == self.parser_test._test_files_structure
 
     def test_parse_not_a_folder(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(BTTError):
             self.parser_test.parse('Makefile')
 
     def test_parse_path_does_not_exist(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(BTTError):
             self.parser_test.parse('some-stramge-path')

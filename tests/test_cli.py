@@ -6,13 +6,15 @@ from better_test_tool.cli import cli, nosetests, parse, pytest
 
 
 class TestCLI:
-    @classmethod
-    def setup_class(cls):
-        cls.runner = CliRunner()
+    def setup_method(self, method):
+        self.runner = CliRunner()
 
-    def teardown_method(self, test_method):
+    def remove_cache(self):
         if os.path.exists('.btt_cache.json'):
             os.remove('.btt_cache.json')
+
+    def teardown_method(self, method):
+        self.remove_cache()
 
     def test_version(self):
         result = self.runner.invoke(cli, '--version')
@@ -37,6 +39,18 @@ class TestCLI:
         result = self.runner.invoke(parse, 'README.md')
         assert result.exit_code == 0
         assert 'This is not a folder\n' == result.output
+
+    def test_nosetests_no_cache(self):
+        self.remove_cache()
+        result = self.runner.invoke(nosetests, 'skl')
+        assert result.exit_code == 0
+        assert 'Cache file not found. First run the command "btt parse folderpath"' in result.output
+
+    def test_pytest_no_cache(self):
+        self.remove_cache()
+        result = self.runner.invoke(pytest, 'skl')
+        assert result.exit_code == 0
+        assert 'Cache file not found. First run the command "btt parse folderpath"' in result.output
 
     def test_nosetests(self):
         self.runner.invoke(parse, 'file-fixtures')
@@ -87,3 +101,9 @@ class TestCLI:
         assert result.exit_code == 0
         assert 'Copied to clipboard' in result.output
         assert 'pytest file-fixtures/test_skl_1.py::TestAlphaClass::test_settings -v\n'
+
+    def test_pytest_no_result_copy(self):
+        result = self.runner.invoke(pytest, ['skl', '-m', 'setup', '-cp'])
+        assert result.exit_code == 0
+        assert 'Copied to clipboard' not in result.output
+        assert 'No matches found.' in result.output

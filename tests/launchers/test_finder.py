@@ -7,6 +7,7 @@ import pytest
 
 from better_test_tool.launchers import Finder
 from better_test_tool.parser import ParserTests
+from better_test_tool.utils import BTTError
 
 
 class TestFinder:
@@ -35,10 +36,8 @@ class TestFinder:
         assert hasattr(self.finder, '_files_structure') is True
 
     def test_cache_load_without_cache(self, capsys):
-        with pytest.raises(SystemExit):
+        with pytest.raises(BTTError):
             hasattr(self.finder, '_files_structure')
-        captured = capsys.readouterr()
-        assert 'Cache file not found. First run the command "btt parse folderpath"\n' in captured.err
 
     def test_cache_auto_update(self):
         self.do_parse()
@@ -101,18 +100,15 @@ class TestFinder:
         captured = capsys.readouterr()
 
         assert result is False
-        assert 'Too many suggestions. Please enter a more specific query\n' in captured.err
+        assert 'Too many suggestions. Please enter a more specific query\n' in captured.out
 
     def test_item_selection_one_item(self):
         result = self.finder.item_selection(['one'])
         assert result == 'one'
 
     def test_item_selection_no_modules(self, capsys):
-        result = self.finder.item_selection([])
-        captured = capsys.readouterr()
-
-        assert result is False
-        assert 'No matches found.\n' in captured.err
+        with pytest.raises(BTTError):
+            result = self.finder.item_selection([])
 
     def test_item_selection_several_items(self, capsys, monkeypatch):
         fake_modules = ['one', 'two', 'three', 'four', 'five']

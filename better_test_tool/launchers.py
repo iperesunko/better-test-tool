@@ -3,10 +3,10 @@ import os
 import re
 import sys
 
+import click
+
 from better_test_tool import utils
 from better_test_tool.parser import ParserTests
-
-color_output = utils.ColorOutput()
 
 
 class Finder(object):
@@ -37,8 +37,7 @@ class Finder(object):
                 if utils.is_folder_modified(m_time, test_folder):
                     self._files_structure = self.cache_update(self._files_structure.get('test_folder'))
             else:
-                color_output.error('Cache file not found. First run the command "btt parse folderpath"\n')
-                sys.exit(1)
+                raise utils.BTTError('Cache file not found. First run the command "btt parse folderpath"')
 
         return self.__dict__.get(item)
 
@@ -104,11 +103,11 @@ class Finder(object):
                     digit = int(text)
 
                     if digit > _range:
-                        color_output.warning('The answer is out of the acceptable range. Choose another answer.\n')
+                        click.secho('The answer is out of the acceptable range. Choose another answer.', fg='red')
                     else:
                         return digit
                 else:
-                    color_output.warning('This is not a digit. Please enter the answer again\n')
+                    click.secho('This is not a digit. Please enter the answer again', fg='red')
 
     def item_selection(self, items, target='modules'):
         """
@@ -121,20 +120,19 @@ class Finder(object):
         modules_number = len(items)
 
         if modules_number > 10:
-            color_output.warning('Too many suggestions. Please enter a more specific query\n')
+            click.secho('Too many suggestions. Please enter a more specific query', fg='blue')
             return False
         elif 1 < modules_number <= 10:
             formatted = utils.format_multuple_modules(items)
             message = 'Several {} were found, select the required one:\n'.format(target) + formatted
-            color_output.standard(message + '\n')
+            click.echo(message)
 
             result = self.read_user_answer(modules_number)
             module_path = items[result - 1]
         elif modules_number == 1:
             module_path = items[0]
         else:
-            color_output.warning('No matches found.\n')
-            return False
+            raise utils.BTTError('No matches found.')
 
         return module_path
 

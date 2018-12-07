@@ -99,7 +99,7 @@ class ParserTests:
         m_time = self.file_scaner.scan(folder_path)
 
         if not self.file_scaner.files:
-            raise ValueError('Nothing to parse - no test files')
+            raise utils.BTTError('Nothing to parse - no test files')
 
         for filepath in self.file_scaner.files:
             self._test_files_structure[filepath] = self.file_parser.parse_file(filepath)

@@ -1,39 +1,15 @@
 import os
-import sys
 
 import pkg_resources
 
 
-class ColorOutput:
-    """
-    The class contains methods for color outputting messages to the screen
-    """
+class BTTError(Exception):
+    def __init__(self, message):
+        super(Exception, self).__init__()
+        self.message = message
 
-    red = '\033[31m'
-    green = '\033[32m'
-    yellow = '\033[33m'
-    blue = '\033[94m'
-    reset = '\033[0m'
-
-    def error(self, text):
-        """Displays error messages in the console"""
-        sys.stderr.write(self.red + text + self.reset)
-
-    def warning(self, text):
-        """Displays warning messages in the console"""
-        sys.stderr.write(self.yellow + text + self.reset)
-
-    def succes(self, text):
-        """Displays success messages in the console"""
-        sys.stdout.write(self.green + text + self.reset)
-
-    def info(self, text):
-        """Displays info messages in the console"""
-        sys.stdout.write(self.blue + text + self.reset)
-
-    def standard(self, text):
-        """Displays standard messages in the console"""
-        sys.stdout.write(text)
+    def __str__(self):
+        return self.message
 
 
 # File configuration for caching
@@ -61,12 +37,12 @@ def check_test_folder(test_folder):
     """
     Checks if the specified path exists and if it is a folder
     :param str test_folder: path to folder
-    :return: Raises ValueError if not
+    :return: Raises BTTError if not
     """
     if not os.path.exists(test_folder):
-        raise ValueError('Path does not exists')
+        raise BTTError('Path does not exists')
     elif not os.path.isdir(test_folder):
-        raise ValueError('This is not a folder')
+        raise BTTError('This is not a folder')
 
 
 def is_folder_modified(m_time, test_folder):

@@ -21,12 +21,12 @@ def test_check_test_folder():
 
 
 def test_check_test_folder_not_folder():
-    with pytest.raises(ValueError):
+    with pytest.raises(utils.BTTError):
         utils.check_test_folder('Makefile')
 
 
 def test_check_test_folder_not_exists():
-    with pytest.raises(ValueError):
+    with pytest.raises(utils.BTTError):
         utils.check_test_folder('some-test-folder')
 
 

@@ -1,8 +1,8 @@
-code-formatting:
+format:
 	black better_test_tool tests -S -l 119
 	isort better_test_tool tests -rc
 
-run-tests:
+test:
 	py.test --cov=better_test_tool tests -v
 
 clean:
