@@ -10,8 +10,9 @@ setup(
     description="Utility for simple testing projects",
     url="https://github.com/iperesunko/better-test-tool",
     packages=find_packages(exclude=['tests', 'file-fixtures']),
-    entry_points={
-        'console_scripts': ['btt=better_test_tool.cli:cli'],
-    },
+    entry_points='''
+        [console_scripts]
+        btt=better_test_tool.cli:cli
+    ''',
     install_requires=['Click', 'pyperclip']
 )
