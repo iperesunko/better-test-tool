@@ -20,7 +20,7 @@ class TestFilesScaner:
         }
 
         m_type = self.files_scaner.scan('file-fixtures')
-        assert m_type == 1544035211.4587939
+        assert m_type == os.stat('file-fixtures').st_mtime
         assert test_files == set(self.files_scaner.files)
 
     def test_files_filter(self):
@@ -58,7 +58,7 @@ class TestParserTests:
         self.parser_test = ParserTests()
         self.parser_test._cache_file = '.btt_cache.json'
         self.parsed_structure = {
-            'm_time': 1544035211.4587939,
+            'm_time': os.stat('file-fixtures').st_mtime,
             'test_folder': 'file-fixtures',
             'file-fixtures/test_config_server.py': {
                 'TestConfigServer': ['test_one_case', 'test_alpha_settings'],
