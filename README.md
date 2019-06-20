@@ -35,8 +35,6 @@ For zsh users add this to your `.zshrc`:
 eval "$(_BTT_COMPLETE=source_zsh btt)"
 ```
 
-> Add the cache file (.btt-cache.json) to **.gitignore** (must be committed) or add to the exclusion file **.git/info/exclude** in project folder
-
 ## Commands:
 ```bash
 $ btt --help
