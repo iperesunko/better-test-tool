@@ -17,6 +17,36 @@ class BTTError(Exception):
 CACHE_FILENAME = '.btt_cache.json'
 
 
+def get_cache_folder():
+    """
+    Returns the path for the directory where the cache files will be stored.
+    If the folder does not exist, it creates it.
+    :return str: folder path
+    """
+    current_user = os.getlogin()
+    cache_folder = '/home/{}/.cache/btt'.format(current_user)
+    if not os.path.exists(cache_folder):
+        os.makedirs(cache_folder)
+    return cache_folder
+
+
+def get_project_name():
+    """
+    Gets the name of the folder from which the utility is called
+    :return str: folder name
+    """
+    return os.getcwd().split('/')[-1]
+
+
+def get_cache_filename():
+    """
+    Returns the path and name of the cache file for the current project
+    :return str: cache file path
+    """
+    filename = '{}.json'.format(get_project_name())
+    return os.path.join(get_cache_folder(), filename)
+
+
 def format_multuple_modules(modules):
     """
     Forms the numbered output of modules from the list
