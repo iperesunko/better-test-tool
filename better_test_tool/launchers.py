@@ -27,8 +27,8 @@ class Finder(object):
     def __getattr__(self, item):
         # lazy loading of data from the cache
         if item == '_files_structure':
-            if os.path.exists(utils.CACHE_FILENAME):
-                with open(utils.CACHE_FILENAME) as file:
+            if os.path.exists(utils.get_cache_filename()):
+                with open(utils.get_cache_filename()) as file:
                     self._files_structure = json.load(file)
 
                 # automatic update cache

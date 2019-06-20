@@ -1,6 +1,7 @@
 import os
 
 from click.testing import CliRunner
+from better_test_tool import utils
 
 from better_test_tool.cli import cli, nosetests, parse, pytest
 
@@ -10,8 +11,8 @@ class TestCLI:
         self.runner = CliRunner()
 
     def remove_cache(self):
-        if os.path.exists('.btt_cache.json'):
-            os.remove('.btt_cache.json')
+        if os.path.exists(utils.get_cache_filename()):
+            os.remove(utils.get_cache_filename())
 
     def teardown_method(self, method):
         self.remove_cache()

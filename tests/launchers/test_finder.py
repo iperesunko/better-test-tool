@@ -7,7 +7,7 @@ import pytest
 
 from better_test_tool.launchers import Finder
 from better_test_tool.parser import ParserTests
-from better_test_tool.utils import BTTError
+from better_test_tool.utils import BTTError, get_cache_filename
 
 
 class TestFinder:
@@ -15,8 +15,8 @@ class TestFinder:
         self.finder = Finder()
 
     def teardown_method(self, method):
-        if os.path.exists('.btt_cache.json'):
-            os.remove('.btt_cache.json')
+        if os.path.exists(get_cache_filename()):
+            os.remove(get_cache_filename())
 
     @staticmethod
     def do_parse():
@@ -41,13 +41,13 @@ class TestFinder:
 
     def test_cache_auto_update(self):
         self.do_parse()
-        with open('.btt_cache.json', 'r') as file:
+        with open(get_cache_filename(), 'r') as file:
             test_data = json.load(file)
 
         rigth_time = test_data.get('m_time')
         new_time = {'m_time': time.time()}
         test_data.update(new_time)
-        with open('.btt_cache.json', 'w') as file:
+        with open(get_cache_filename(), 'w') as file:
             json.dump(test_data, file)
 
         assert rigth_time == self.finder._files_structure.get('m_time')
