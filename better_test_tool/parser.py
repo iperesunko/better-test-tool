@@ -82,7 +82,7 @@ class ParserTests:
     saving to the cache and displaying it on the screen
     """
 
-    _cache_file = utils.CACHE_FILENAME
+    _cache_file = utils.get_cache_filename()
 
     def __init__(self):
         self.file_scaner = FilesScaner()

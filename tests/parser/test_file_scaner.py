@@ -2,6 +2,7 @@ import json
 import os
 
 import pytest
+from better_test_tool import utils
 
 from better_test_tool.parser import FilesParser, FilesScaner, ParserTests
 from better_test_tool.utils import BTTError
@@ -56,7 +57,6 @@ class TestFilesParser:
 class TestParserTests:
     def setup_method(self, method):
         self.parser_test = ParserTests()
-        self.parser_test._cache_file = '.btt_cache.json'
         self.parsed_structure = {
             'm_time': os.stat('file-fixtures').st_mtime,
             'test_folder': 'file-fixtures',
@@ -78,15 +78,15 @@ class TestParserTests:
         }
 
     def teardown_method(self, method):
-        if os.path.exists('.btt_cache.json'):
-            os.remove('.btt_cache.json')
+        if os.path.exists(utils.get_cache_filename()):
+            os.remove(utils.get_cache_filename())
 
     def test_parse(self):
         self.parser_test.parse('file-fixtures')
-        assert os.path.exists('.btt_cache.json') is True
+        assert os.path.exists(utils.get_cache_filename()) is True
         assert self.parser_test.test_files_structure == self.parsed_structure
 
-        with open('.btt_cache.json') as file:
+        with open(utils.get_cache_filename()) as file:
             data = json.load(file)
         assert data == self.parsed_structure and data == self.parser_test.test_files_structure
 
