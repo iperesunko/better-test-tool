@@ -13,10 +13,6 @@ class BTTError(Exception):
         return self.message
 
 
-# File configuration for caching
-CACHE_FILENAME = '.btt_cache.json'
-
-
 def get_cache_folder():
     """
     Returns the path for the directory where the cache files will be stored.

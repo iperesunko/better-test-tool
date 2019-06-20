@@ -25,7 +25,10 @@ class TestCLI:
     def test_parse(self):
         result = self.runner.invoke(parse, 'file-fixtures')
         assert result.exit_code == 0
-        assert 'Parsing completed. Found 4 files.\n' == result.output
+        assert (
+                'Parsing completed. Found 4 files.\n'
+                'Cache saved into "{}"\n'.format(utils.get_cache_filename())
+                == result.output)
 
     def test_parse_no_test_files(self):
         result = self.runner.invoke(parse, 'better_test_tool')

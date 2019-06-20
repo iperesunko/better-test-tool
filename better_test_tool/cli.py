@@ -3,7 +3,8 @@ import pyperclip
 
 from better_test_tool.launchers import NoseTestsLauncher, PytestLauncher
 from better_test_tool.parser import ParserTests
-from better_test_tool.utils import BTTError, auto_complete_paths, get_version
+from better_test_tool.utils import (BTTError, auto_complete_paths,
+                                    get_cache_filename, get_version)
 
 
 def copy_to_clipboard(result):
@@ -27,6 +28,7 @@ def parse(path):
         click.secho(error.message, fg=error.color)
     else:
         click.secho('Parsing completed. Found {} files.'.format(files_number), fg='green')
+        click.secho('Cache saved into "{}"'.format(get_cache_filename()), fg='green')
 
 
 @cli.command(help='generates a command for manual execute in nosetests')
