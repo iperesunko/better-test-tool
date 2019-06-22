@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.7'
+VERSION = '0.7.5'
 
 setup(
     name="better_test_tool",
