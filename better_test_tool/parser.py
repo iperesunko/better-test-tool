@@ -52,11 +52,9 @@ class FilesParser(object):
         :return dict: key - filepath, value dict with parsed structure
         """
         metadata = defaultdict(list)
-        with open(path) as _file:
-            text = _file.readlines()
-
         current_class = None
-        for line in text:
+
+        for line in utils.lazy_read_file(path):
             _class = self.re_class.match(line)
             _method = self.re_method.match(line)
             _function = self.re_function.match(line)

@@ -153,3 +153,9 @@ def auto_complete_paths(ctx, args, incomplete):
         return folder_list
     else:
         return filter_folders(folder_list, search_word)
+
+
+def lazy_read_file(path):
+    with open(path) as _file:
+        for line in _file:
+            yield line
