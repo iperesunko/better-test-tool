@@ -96,14 +96,14 @@ class Finder(object):
             try:
                 text = sys.stdin.readline()
             except KeyboardInterrupt:
-                return
+                sys.exit(0)
             else:
                 text = text.strip()
 
                 if text.isdigit():
                     digit = int(text)
 
-                    if digit > _range:
+                    if digit <= 0 or digit > _range:
                         click.secho('The answer is out of the acceptable range. Choose another answer.', fg='red')
                     else:
                         return digit
