@@ -1,10 +1,7 @@
 import click
 import pyperclip
 
-from better_test_tool.launchers import NoseTestsLauncher, PytestLauncher
-from better_test_tool.parser import ParserTests
-from better_test_tool.utils import (BTTError, auto_complete_paths,
-                                    get_cache_filename, get_version)
+from better_test_tool import launchers, parser, utils
 
 
 def copy_to_clipboard(result):
@@ -13,22 +10,22 @@ def copy_to_clipboard(result):
 
 
 @click.group(help='Better Test Tool: Utility for simple testing projects')
-@click.version_option(version=get_version())
+@click.version_option(version=utils.get_version())
 def cli():
     pass
 
 
 @cli.command(help='parses a test folder structure and cache it')
-@click.argument('path', type=click.Path(exists=True), autocompletion=auto_complete_paths)
+@click.argument('path', type=click.Path(exists=True), autocompletion=utils.auto_complete_paths)
 def parse(path):
-    file_parser = ParserTests()
+    file_parser = parser.ParserTests()
     try:
         files_number = file_parser.parse(path)
-    except BTTError as error:
+    except utils.BTTError as error:
         click.secho(error.message, fg=error.color)
     else:
         click.secho('Parsing completed. Found {} files.'.format(files_number), fg='green')
-        click.secho('Cache saved into "{}"'.format(get_cache_filename()), fg='green')
+        click.secho('Cache saved into "{}"'.format(utils.get_cache_filename()), fg='green')
 
 
 def search_process(provider, path, method, copy):
@@ -42,7 +39,7 @@ def search_process(provider, path, method, copy):
     """
     try:
         result = provider.generate(path, method)
-    except BTTError as error:
+    except utils.BTTError as error:
         click.secho(error.message, fg=error.color)
     else:
         if result and copy:
@@ -56,7 +53,7 @@ def search_process(provider, path, method, copy):
 @click.option('-m', '--method')
 @click.option('-cp', '--copy', is_flag=True)
 def nosetests(path, method, copy):
-    search_process(NoseTestsLauncher(), path, method, copy)
+    search_process(launchers.NoseTestsLauncher(), path, method, copy)
 
 
 @cli.command(help='generates a command for manual execute in pytest')
@@ -64,4 +61,4 @@ def nosetests(path, method, copy):
 @click.option('-m', '--method')
 @click.option('-cp', '--copy', is_flag=True)
 def pytest(path, method, copy):
-    search_process(PytestLauncher(), path, method, copy)
+    search_process(launchers.PytestLauncher(), path, method, copy)

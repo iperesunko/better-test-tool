@@ -5,8 +5,7 @@ import sys
 
 import click
 
-from better_test_tool import utils
-from better_test_tool.parser import ParserTests
+from better_test_tool import parser, utils
 
 
 class Finder(object):
@@ -20,9 +19,9 @@ class Finder(object):
         :param test_folder: path to test folder
         :return dict: a new test structure
         """
-        parser = ParserTests()
-        parser.parse(test_folder)
-        return parser.test_files_structure
+        _parser = parser.ParserTests()
+        _parser.parse(test_folder)
+        return _parser.test_files_structure
 
     def __getattr__(self, item):
         # lazy loading of data from the cache
