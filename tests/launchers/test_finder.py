@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import time
+import re
 
 import pytest
 
@@ -24,7 +25,12 @@ class TestFinder:
         parser.parse('file-fixtures')
 
     def test__generate_regex(self):
-        expected = ('.*unit.*', '.*extract.*pstn.*', '.*.py.*', '.*regress.*transf.*cme.*')
+        expected = (
+            re.compile('.*unit.*', re.IGNORECASE),
+            re.compile('.*extract.*pstn.*', re.IGNORECASE),
+            re.compile('.*.py.*', re.IGNORECASE),
+            re.compile('.*regress.*transf.*cme.*', re.IGNORECASE),
+        )
 
         data = ('unit', 'extract pstn', '.py', 'regress transf cme')
 

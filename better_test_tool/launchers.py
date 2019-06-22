@@ -45,11 +45,12 @@ class Finder(object):
         """
         Generate a regex pattern
         :param str simplified_path: 'unit config_server'
-        :return str: a string regex
+        :return re.compile: regex object
         """
         splitted = simplified_path.split(' ')
         raw = ''.join(['.*{}.*'.format(word) for word in splitted])
-        return raw.replace('.*.*', '.*')
+        regex = raw.replace('.*.*', '.*')
+        return re.compile(regex, re.IGNORECASE)
 
     def finds_modules(self, simplified_path):
         """
@@ -62,7 +63,7 @@ class Finder(object):
         regex = self._generate_regex(simplified_path)
 
         for module in modules:
-            if re.match(regex, module):
+            if regex.match(module):
                 matching.append(module)
 
         return matching
@@ -80,7 +81,7 @@ class Finder(object):
 
         for parent in module_dict.keys():
             for test in module_dict[parent]:
-                if re.match(regex, test):
+                if regex.match(test):
                     matching.append('{} {}'.format(parent, test))
 
         return matching
