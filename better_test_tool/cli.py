@@ -31,14 +31,17 @@ def parse(path):
         click.secho('Cache saved into "{}"'.format(get_cache_filename()), fg='green')
 
 
-@cli.command(help='generates a command for manual execute in nosetests')
-@click.argument('path')
-@click.option('-m', '--method')
-@click.option('-cp', '--copy', is_flag=True)
-def nosetests(path, method, copy):
-    nose_launcher = NoseTestsLauncher()
+def search_process(provider, path, method, copy):
+    """
+    Common search command realization for different test providers
+    :param provider: provider class
+    :param str path: path to modile
+    :param str method: function or method name
+    :param bool copy:
+    :return:
+    """
     try:
-        result = nose_launcher.generate(path, method)
+        result = provider.generate(path, method)
     except BTTError as error:
         click.secho(error.message, fg=error.color)
     else:
@@ -46,6 +49,14 @@ def nosetests(path, method, copy):
             copy_to_clipboard(result)
 
         click.echo(result)
+
+
+@cli.command(help='generates a command for manual execute in nosetests')
+@click.argument('path')
+@click.option('-m', '--method')
+@click.option('-cp', '--copy', is_flag=True)
+def nosetests(path, method, copy):
+    search_process(NoseTestsLauncher(), path, method, copy)
 
 
 @cli.command(help='generates a command for manual execute in pytest')
@@ -53,13 +64,4 @@ def nosetests(path, method, copy):
 @click.option('-m', '--method')
 @click.option('-cp', '--copy', is_flag=True)
 def pytest(path, method, copy):
-    pytest_launcher = PytestLauncher()
-    try:
-        result = pytest_launcher.generate(path, method)
-    except BTTError as error:
-        click.secho(error.message, fg=error.color)
-    else:
-        if result and copy:
-            copy_to_clipboard(result)
-
-        click.echo(result)
+    search_process(PytestLauncher(), path, method, copy)

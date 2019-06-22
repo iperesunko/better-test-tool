@@ -1,8 +1,8 @@
 import os
 
 from click.testing import CliRunner
-from better_test_tool import utils
 
+from better_test_tool import utils
 from better_test_tool.cli import cli, nosetests, parse, pytest
 
 

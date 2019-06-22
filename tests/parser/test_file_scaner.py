@@ -2,8 +2,8 @@ import json
 import os
 
 import pytest
-from better_test_tool import utils
 
+from better_test_tool import utils
 from better_test_tool.parser import FilesParser, FilesScaner, ParserTests
 from better_test_tool.utils import BTTError
 
