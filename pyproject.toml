@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "better-test-tool"
-version = "0.6.0"
+version = "0.7.5"
 description = "Tool for easy testing"
 authors = ["Ihor Peresunko"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.4"
+python = "^2.7"
 click = "^7.0"
 pyperclip = "^1.7"
 
