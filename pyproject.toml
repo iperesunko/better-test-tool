@@ -4,6 +4,14 @@ version = "0.7.5"
 description = "Tool for easy testing"
 authors = ["Ihor Peresunko"]
 license = "MIT"
+exclude = [
+    "demo.gif",
+    "file-fixtures/**",
+    ".gitignore",
+]
+
+[tool.poetry.scripts]
+btt = 'better_test_tool.cli:cli'
 
 [tool.poetry.dependencies]
 python = "^2.7"
