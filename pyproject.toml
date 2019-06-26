@@ -14,7 +14,7 @@ exclude = [
 btt = 'better_test_tool.cli:cli'
 
 [tool.poetry.dependencies]
-python = "^2.7"
+python = "~2.7 || ^3.4"
 click = "^7.0"
 pyperclip = "^1.7"
 
