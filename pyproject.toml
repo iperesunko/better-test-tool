@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "better-test-tool"
-version = "0.7.5"
+version = "0.8.0"
 description = "Tool for easy testing"
 authors = ["Ihor Peresunko"]
 license = "MIT"

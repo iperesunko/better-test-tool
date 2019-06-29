@@ -1,7 +1,5 @@
 import os
 
-import pkg_resources
-
 
 class BTTError(Exception):
     def __init__(self, message, color='red'):
@@ -50,14 +48,6 @@ def format_multuple_modules(modules):
     :return str:
     """
     return '\n'.join(['{}. {}'.format(index, name) for index, name in enumerate(modules, 1)])
-
-
-def get_version():
-    """
-    Returns a utility version
-    :return str: '0.5'
-    """
-    return pkg_resources.require('better_test_tool')[0].version
 
 
 def check_test_folder(test_folder):

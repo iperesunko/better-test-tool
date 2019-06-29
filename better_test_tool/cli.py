@@ -1,7 +1,7 @@
 import click
 import pyperclip
 
-from better_test_tool import launchers, parser, utils
+from better_test_tool import launchers, parser, utils, VERSION
 
 
 def copy_to_clipboard(result):
@@ -10,7 +10,7 @@ def copy_to_clipboard(result):
 
 
 @click.group(help='Better Test Tool: Utility for simple testing projects')
-@click.version_option(version=utils.get_version())
+@click.version_option(version=VERSION)
 def cli():
     pass
 
