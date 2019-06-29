@@ -16,12 +16,9 @@ Tested on Linux
 
 ## Installation
 ```bash
-$ git clone https://github.com/iperesunko/better-test-tool.git
-$ python setup.py install --user
-
-# or
 $ pip install git+https://github.com/iperesunko/better-test-tool.git --user
 ```
+Or download the binary from release [page](https://github.com/iperesunko/better-test-tool/releases)
 
 ### Autocompletion
 For bash users add this to your `.bashrc`:
